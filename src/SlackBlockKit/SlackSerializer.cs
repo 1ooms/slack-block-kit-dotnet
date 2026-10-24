@@ -25,6 +25,7 @@ public static class SlackSerializer
         {
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, // Don't emit `null` properties in Slack payloads.
             WriteIndented = indented,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower) }, // Slack expects all JSON properties to be snake_case.
             TypeInfoResolver = new DefaultJsonTypeInfoResolver
             {
                 Modifiers = { IgnoreTypePropertyModifier }
