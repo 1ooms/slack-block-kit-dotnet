@@ -1,43 +1,23 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace SlackBlockKit.TextObjects;
 
-public class PlainTextObject : TextObject
+/// <summary>
+/// Represents a plain text object in Slack Block Kit (<c>type: "plain_text"</c>).
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/composition-objects/text#plain_text">Slack plain_text Object Documentation</seealso>
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(PlainTextObject), "plain_text")]
+public class PlainTextObject(string text, bool? emoji = null) : TextObject(text)
 {
-    public PlainTextObject(string text, bool? emoji = true, bool? verbatim = false) : base(text)
-    {
-        Emoji = emoji;
-        Verbatim = verbatim;
-        ValidateText();
-    }
-
     public override string Type => "plain_text";
-
-    [JsonIgnore] public int MaxLength { get; set; } = 3000;
 
     [JsonPropertyName("emoji")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? Emoji { get; set; }
+    public bool? Emoji { get; set; } = emoji;
 
-    [JsonPropertyName("verbatim")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? Verbatim { get; set; }
-
-    public override string Text
+    public static implicit operator PlainTextObject(string text)
     {
-        get => base.Text;
-        set
-        {
-            base.Text = value;
-            ValidateText();
-        }
-    }
-
-    private void ValidateText()
-    {
-        if (string.IsNullOrEmpty(Text)) throw new ArgumentException("Text cannot be null or empty.", nameof(Text));
-
-        if (Text.Length > MaxLength)
-            throw new ArgumentException($"Text cannot be longer than {MaxLength} characters.", nameof(Text));
+        return new PlainTextObject(text);
     }
 }

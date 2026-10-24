@@ -1,18 +1,55 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.Elements;
 
 namespace SlackBlockKit.TextObjects;
 
+/// <summary>
+/// Base class representing a Slack Text composition object (<c>plain_text</c> or <c>mrkdwn</c>).
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/composition-objects/text">Slack Text Object Documentation</seealso>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(PlainTextObject), "plain_text")]
-[JsonDerivedType(typeof(RawTextObject), "raw_text")]
 [JsonDerivedType(typeof(MarkdownTextObject), "mrkdwn")]
-[JsonDerivedType(typeof(HeaderTextObject), "header")]
-public abstract class TextObject(string text) : IContextElement
+public abstract class TextObject : IContextElement
 {
-    [JsonPropertyName("text")] public virtual string Text { get; set; } = text;
+    private const int DefaultMaxLength = 3000;
+    private string _text;
 
-    [JsonIgnore] public abstract string Type { get; }
+    protected TextObject(string text, int maxLength = DefaultMaxLength)
+    {
+        ValidateText(text, maxLength);
+        _text = text;
+        MaxLength = maxLength;
+    }
+
+    [JsonPropertyName("text")]
+    public string Text
+    {
+        get => _text;
+        set
+        {
+            ValidateText(value, MaxLength);
+            _text = value;
+        }
+    }
+
+    [JsonIgnore] 
+    private int MaxLength { get; }
+
+    [JsonIgnore]
+    public abstract string Type { get; }
+
+    private static void ValidateText(string text, int maxLength)
+    {
+        if (string.IsNullOrEmpty(text))
+            throw new ArgumentException("Text cannot be null or empty.", nameof(text));
+
+        if (text.Length > maxLength)
+            throw new ArgumentException($"Text cannot be longer than {maxLength} characters.", nameof(text));
+    }
+
+    public override string ToString()
+    {
+        return Text;
+    }
 }
-
-public interface ITableTextObject;
