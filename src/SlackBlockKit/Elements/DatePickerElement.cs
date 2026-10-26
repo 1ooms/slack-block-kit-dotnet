@@ -1,22 +1,26 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.CompositionObjects;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.Elements;
 
-public class DatePickerElement : Element, IActionsElement, IInputElement, ISectionElement
+/// <summary>
+/// Represents a date picker element that allows users to select a date from a calendar-style UI.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/date-picker-element">Slack Date Picker Element Documentation</seealso>
+public class DatePickerElement : ActionElement, IActionsElement, IInputElement, ISectionElement
 {
-    private const int MaxPlaceHolderLength = 150;
+    private const int MaxPlaceholderLength = 150;
 
-    [JsonPropertyName("initial_date")] [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    private string? _initialDateString;
-
-    public DatePickerElement(string? actionId = null, DateTime? initialDate = null,
-        ConfirmationDialogObject? confirm = null, bool? focusOnLoad = null, PlainTextObject? placeholder = null)
+    public DatePickerElement(
+        string? actionId = null,
+        DateTime? initialDate = null,
+        ConfirmationDialogObject? confirm = null,
+        bool? focusOnLoad = null,
+        PlainTextObject? placeholder = null)
     {
         ActionId = actionId;
         InitialDate = initialDate;
-        _initialDateString = InitialDate?.ToString("yyyy-MM-dd");
         Confirm = confirm;
         FocusOnLoad = focusOnLoad;
         Placeholder = placeholder;
@@ -25,6 +29,10 @@ public class DatePickerElement : Element, IActionsElement, IInputElement, ISecti
     public override string Type => "datepicker";
 
     [JsonIgnore] public DateTime? InitialDate { get; set; }
+
+    [JsonPropertyName("initial_date")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? InitialDateString => InitialDate?.ToString("yyyy-MM-dd");
 
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -41,7 +49,11 @@ public class DatePickerElement : Element, IActionsElement, IInputElement, ISecti
         get;
         set
         {
-            value?.MaxLength = MaxPlaceHolderLength;
+            if (value != null)
+            {
+                ThrowIfExceedsLength(value.Text, MaxPlaceholderLength);
+            }
+
             field = value;
         }
     }
