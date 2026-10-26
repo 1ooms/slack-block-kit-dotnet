@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace SlackBlockKit.TextObjects;
+namespace SlackBlockKit.CompositionObjects.TextObjects;
 
 /// <summary>
 /// Represents a markdown text object in Slack Block Kit (<c>type: "mrkdwn"</c>).

@@ -6,8 +6,13 @@ namespace SlackBlockKit.CompositionObjects;
 /// Defines an object containing workflow information for a workflow button.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/composition-objects/workflow">Slack Workflow Object Documentation</seealso>
-public class WorkflowObject(TriggerObject trigger) : CompositionObject
+public class WorkflowObject : CompositionObject
 {
+    public WorkflowObject(TriggerObject trigger)
+    {
+        Trigger = trigger;
+    }
+    
     public WorkflowObject(string triggerUrl, List<CustomizableInputParameter>? parameters = null)
         : this(new TriggerObject(triggerUrl, parameters))
     {
@@ -19,5 +24,13 @@ public class WorkflowObject(TriggerObject trigger) : CompositionObject
     }
 
     [JsonPropertyName("trigger")]
-    public TriggerObject Trigger { get; set; } = trigger;
+    public TriggerObject Trigger
+    {
+        get;
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            field = value;
+        }
+    }
 }

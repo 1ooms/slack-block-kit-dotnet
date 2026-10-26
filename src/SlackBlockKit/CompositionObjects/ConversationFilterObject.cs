@@ -30,9 +30,8 @@ public class ConversationFilterObject : CompositionObject
         bool? excludeBotUsers = null)
     {
         ValidateAtLeastOne(include, excludeExternalSharedChannels, excludeBotUsers);
-        ValidateInclude(include);
 
-        _include = include;
+        _include = ThrowIfEmpty(include);
         _excludeExternalSharedChannels = excludeExternalSharedChannels;
         _excludeBotUsers = excludeBotUsers;
     }
@@ -44,8 +43,7 @@ public class ConversationFilterObject : CompositionObject
         get => _include;
         set
         {
-            ValidateInclude(value);
-            _include = value;
+            _include = ThrowIfEmpty(value);
             ValidateAtLeastOne(_include, _excludeExternalSharedChannels, _excludeBotUsers);
         }
     }
@@ -72,12 +70,6 @@ public class ConversationFilterObject : CompositionObject
             _excludeBotUsers = value;
             ValidateAtLeastOne(_include, _excludeExternalSharedChannels, _excludeBotUsers);
         }
-    }
-
-    private static void ValidateInclude(List<ConversationType>? include)
-    {
-        if (include != null && include.Count == 0)
-            throw new ArgumentException("The 'include' list cannot be empty when provided.", nameof(include));
     }
 
     private static void ValidateAtLeastOne(List<ConversationType>? include, bool? excludeExternalSharedChannels,

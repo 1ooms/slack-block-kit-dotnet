@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.CompositionObjects;
 
@@ -34,8 +34,7 @@ public class OptionObject : CompositionObject
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            if (value.Text.Length > MaxTextLength)
-                throw new ArgumentException($"Option text cannot exceed {MaxTextLength} characters.", nameof(value));
+            ThrowIfExceedsLength(value.Text, MaxTextLength);
             field = value;
         }
     }
@@ -46,10 +45,8 @@ public class OptionObject : CompositionObject
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-            if (value.Length == 0) throw  new ArgumentException("Options cannot be an empty string.", nameof(value));
-            if (value.Length > MaxValueLength)
-                throw new ArgumentException($"Option value cannot exceed {MaxValueLength} characters.", nameof(value));
+            ThrowIfNullOrEmpty(value);
+            ThrowIfExceedsLength(value, MaxValueLength);
             field = value;
         }
     }
@@ -61,9 +58,10 @@ public class OptionObject : CompositionObject
         get;
         set
         {
-            if (value != null && value.Text.Length > MaxDescriptionLength)
-                throw new ArgumentException($"Option description cannot exceed {MaxDescriptionLength} characters.",
-                    nameof(value));
+            if (value != null)
+            {
+                ThrowIfExceedsLength(value.Text, MaxDescriptionLength);
+            }
             field = value;
         }
     }
@@ -75,10 +73,11 @@ public class OptionObject : CompositionObject
         get;
         set
         {
-            if (value != null && value.Length > MaxUrlLength)
-                throw new ArgumentException($"Option url cannot exceed {MaxUrlLength} characters.", nameof(value));
-            if (value != null && value.Length == 0)
-                throw new ArgumentException("Options cannot be an empty string.", nameof(value));
+            if (value != null)
+            {
+                ThrowIfEmpty(value);
+                ThrowIfExceedsLength(value, MaxUrlLength);
+            }
             field = value;
         }
     }

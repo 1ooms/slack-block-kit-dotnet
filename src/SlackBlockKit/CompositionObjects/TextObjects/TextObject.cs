@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using SlackBlockKit.Elements;
 
-namespace SlackBlockKit.TextObjects;
+namespace SlackBlockKit.CompositionObjects.TextObjects;
 
 /// <summary>
 /// Base class representing a Slack Text composition object (<c>plain_text</c> or <c>mrkdwn</c>).
@@ -41,11 +41,8 @@ public abstract class TextObject : IContextElement
 
     private static void ValidateText(string text, int maxLength)
     {
-        if (string.IsNullOrEmpty(text))
-            throw new ArgumentException("Text cannot be null or empty.", nameof(text));
-
-        if (text.Length > maxLength)
-            throw new ArgumentException($"Text cannot be longer than {maxLength} characters.", nameof(text));
+        ThrowIfNullOrEmpty(text);
+        ThrowIfExceedsLength(text, maxLength);
     }
 
     public override string ToString()

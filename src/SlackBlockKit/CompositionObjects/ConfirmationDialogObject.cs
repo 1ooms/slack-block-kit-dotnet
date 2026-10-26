@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.CompositionObjects;
 
@@ -53,9 +53,8 @@ public class ConfirmationDialogObject : CompositionObject
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-            if (value.Text.Length > MaxTitleLength)
-                throw new ArgumentException($"Title cannot exceed {MaxTitleLength} characters.", nameof(value));
+            ThrowIfNullOrEmpty(value.Text);
+            ThrowIfExceedsLength(value.Text, MaxTitleLength);
             field = value;
         }
     }
@@ -66,9 +65,8 @@ public class ConfirmationDialogObject : CompositionObject
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-            if (value.Text.Length > MaxTextLength)
-                throw new ArgumentException($"Text cannot exceed {MaxTextLength} characters.", nameof(value));
+            ThrowIfNullOrEmpty(value.Text);
+            ThrowIfExceedsLength(value.Text, MaxTextLength);
             field = value;
         }
     }
@@ -79,10 +77,8 @@ public class ConfirmationDialogObject : CompositionObject
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-            if (value.Text.Length > MaxButtonTextLength)
-                throw new ArgumentException($"Confirm text cannot exceed {MaxButtonTextLength} characters.",
-                    nameof(value));
+            ThrowIfNullOrEmpty(value.Text);
+            ThrowIfExceedsLength(value.Text, MaxButtonTextLength);
             field = value;
         }
     }
@@ -93,10 +89,8 @@ public class ConfirmationDialogObject : CompositionObject
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-            if (value.Text.Length > MaxButtonTextLength)
-                throw new ArgumentException($"Deny text cannot exceed {MaxButtonTextLength} characters.",
-                    nameof(value));
+            ThrowIfNullOrEmpty(value.Text);
+            ThrowIfExceedsLength(value.Text, MaxButtonTextLength);
             field = value;
         }
     }

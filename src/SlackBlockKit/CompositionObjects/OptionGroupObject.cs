@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.CompositionObjects;
 
@@ -30,8 +30,7 @@ public class OptionGroupObject : CompositionObject
         set
         {
             ArgumentNullException.ThrowIfNull(value);
-            if (value.Text.Length > MaxLabelLength)
-                throw new ArgumentException($"Label text cannot exceed {MaxLabelLength} characters.", nameof(value));
+            ThrowIfExceedsLength(value.Text, MaxLabelLength);
             field = value;
         }
     }
@@ -42,11 +41,8 @@ public class OptionGroupObject : CompositionObject
         get;
         set
         {
-            ArgumentNullException.ThrowIfNull(value);
-            if (value.Count == 0)
-                throw new ArgumentException("Options cannot be an empty list.", nameof(value));
-            if (value.Count > MaxOptions)
-                throw new ArgumentException($"Options cannot contain more than {MaxOptions} items.", nameof(value));
+            ThrowIfNullOrEmpty(value);
+            ThrowIfExceedsCount(value, MaxOptions);
             field = value;
         }
     }

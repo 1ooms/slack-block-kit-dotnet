@@ -22,7 +22,15 @@ public class TriggerObject : CompositionObject
     }
 
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string Url 
+    { 
+        get;
+        set
+        { 
+            ThrowIfNullOrEmpty(value);
+            field = value;
+        } 
+    }
 
     [JsonPropertyName("customizable_input_parameters")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -31,10 +39,11 @@ public class TriggerObject : CompositionObject
         get;
         set
         {
-            if (value != null && value.Count > MaxParameters)
-                throw new ArgumentException(
-                    $"Trigger cannot have more than {MaxParameters} customizable input parameters.",
-                    nameof(value));
+            if (value != null)
+            {
+                ThrowIfEmpty(value);
+                ThrowIfExceedsCount(value, MaxParameters);
+            }
             field = value;
         }
     }
@@ -43,11 +52,25 @@ public class TriggerObject : CompositionObject
 /// <summary>
 /// Defines an input parameter passed to a customizable workflow trigger.
 /// </summary>
-public class CustomizableInputParameter(string name, string value)
+public class CustomizableInputParameter
 {
+    public CustomizableInputParameter(string name, string value)
+    {
+        Name = name;
+        Value = value;
+    }
+
     [JsonPropertyName("name")]
-    public string Name { get; set; } = name;
+    public string Name
+    {
+        get;
+        set => field = ThrowIfNullOrEmpty(value);
+    }
 
     [JsonPropertyName("value")]
-    public string Value { get; set; } = value;
+    public string Value
+    {
+        get;
+        set => field = ThrowIfNullOrEmpty(value);
+    }
 }

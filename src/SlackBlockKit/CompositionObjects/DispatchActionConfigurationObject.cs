@@ -27,12 +27,6 @@ public class DispatchActionConfigurationObject : CompositionObject
     public List<TriggerActions> TriggerActionsOn
     {
         get;
-        set
-        {
-            if (value.Count == 0)
-                throw new ArgumentException("TriggerActionsOn cannot be an empty list.",
-                    nameof(value));
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmpty(value);
     }
 }

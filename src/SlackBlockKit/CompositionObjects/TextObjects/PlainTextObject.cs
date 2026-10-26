@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace SlackBlockKit.TextObjects;
+namespace SlackBlockKit.CompositionObjects.TextObjects;
 
 /// <summary>
 /// Represents a plain text object in Slack Block Kit (<c>type: "plain_text"</c>).
