@@ -9,19 +9,19 @@ namespace SlackBlockKit.Elements.RichText;
 public class RichTextQuoteElement : IRichTextElement
 {
     [JsonConstructor]
-    public RichTextQuoteElement(List<IRichTextElement> elements, int? border = null)
+    public RichTextQuoteElement(List<IRichTextSubElement> elements, int? border = null)
     {
         Elements = elements;
         Border = border;
     }
 
-    public RichTextQuoteElement(params IRichTextElement[] elements)
+    public RichTextQuoteElement(params IRichTextSubElement[] elements)
         : this(elements.ToList())
     {
     }
 
     [JsonPropertyName("elements")]
-    public List<IRichTextElement> Elements
+    public List<IRichTextSubElement> Elements
     {
         get;
         set

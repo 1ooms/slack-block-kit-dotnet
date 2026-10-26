@@ -9,18 +9,18 @@ namespace SlackBlockKit.Elements.RichText;
 public class RichTextSectionElement : IRichTextElement
 {
     [JsonConstructor]
-    public RichTextSectionElement(List<Element> elements)
+    public RichTextSectionElement(List<IRichTextSubElement> elements)
     {
         Elements = elements;
     }
 
-    public RichTextSectionElement(params Element[] elements)
+    public RichTextSectionElement(params IRichTextSubElement[] elements)
         : this(elements.ToList())
     {
     }
 
     [JsonPropertyName("elements")]
-    public List<Element> Elements
+    public List<IRichTextSubElement> Elements
     {
         get;
         set
