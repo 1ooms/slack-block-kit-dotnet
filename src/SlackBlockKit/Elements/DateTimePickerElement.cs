@@ -1,19 +1,22 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.CompositionObjects;
 
 namespace SlackBlockKit.Elements;
 
-public class DateTimePickerElement : Element, IActionsElement, IInputElement
+/// <summary>
+/// Represents a datetime picker element that allows users to select both a date and a time of day.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/datetime-picker-element">Slack Datetime Picker Element Documentation</seealso>
+public class DateTimePickerElement : ActionElement, IActionsElement, IInputElement
 {
-    [JsonPropertyName("initial_date_time")] [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    private long? _initialDateTimeLong;
-
-    public DateTimePickerElement(string? actionId = null, DateTime? initialDateTime = null,
-        ConfirmationDialogObject? confirm = null, bool? focusOnLoad = null)
+    public DateTimePickerElement(
+        string? actionId = null,
+        DateTime? initialDateTime = null,
+        ConfirmationDialogObject? confirm = null,
+        bool? focusOnLoad = null)
     {
         ActionId = actionId;
         InitialDateTime = initialDateTime;
-        if (InitialDateTime != null) _initialDateTimeLong = ((DateTimeOffset)InitialDateTime).ToUnixTimeSeconds();
         Confirm = confirm;
         FocusOnLoad = focusOnLoad;
     }
@@ -22,6 +25,10 @@ public class DateTimePickerElement : Element, IActionsElement, IInputElement
 
     [JsonIgnore] public DateTime? InitialDateTime { get; set; }
 
+    [JsonPropertyName("initial_date_time")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public long? InitialDateTimeSeconds =>
+        InitialDateTime.HasValue ? ((DateTimeOffset)InitialDateTime.Value).ToUnixTimeSeconds() : null;
 
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
