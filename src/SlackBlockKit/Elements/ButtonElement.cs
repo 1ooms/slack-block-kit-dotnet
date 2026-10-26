@@ -8,7 +8,7 @@ namespace SlackBlockKit.Elements;
 /// Represents an interactive button element that allows users a direct path to performing basic actions.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/button-element">Slack Button Element Documentation</seealso>
-public class ButtonElement : Element, IActionsElement, ISectionElement
+public class ButtonElement : ActionElement, IActionsElement, ISectionElement
 {
     /// <summary>
     /// Specifies the visual style of a button element.
@@ -72,6 +72,7 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
                 ThrowIfEmpty(value);
                 ThrowIfExceedsLength(value, MaxUrlLength);
             }
+
             field = value;
         }
     }
@@ -88,6 +89,7 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
                 ThrowIfEmpty(value);
                 ThrowIfExceedsLength(value, MaxValueLength);
             }
+
             field = value;
         }
     }
@@ -111,6 +113,7 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
             {
                 ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
             }
+
             field = value;
         }
     }

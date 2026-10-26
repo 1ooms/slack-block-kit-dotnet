@@ -7,7 +7,7 @@ namespace SlackBlockKit.Elements;
 /// Represents a checkboxes element that allows users to choose multiple items from a list of options.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/checkboxes-element">Slack Checkboxes Element Documentation</seealso>
-public class CheckboxesElement : Element, IActionsElement, IInputElement, ISectionElement
+public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, ISectionElement
 {
     private const int MaxOptions = 10;
 
@@ -37,7 +37,7 @@ public class CheckboxesElement : Element, IActionsElement, IInputElement, ISecti
         get;
         set
         {
-            ThrowIfNullOrEmpty(value);  
+            ThrowIfNullOrEmpty(value);
             ThrowIfExceedsCount(value, MaxOptions);
             field = value;
         }
@@ -62,7 +62,7 @@ public class CheckboxesElement : Element, IActionsElement, IInputElement, ISecti
     [JsonPropertyName("focus_on_load")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? FocusOnLoad { get; set; }
-    
+
     [JsonPropertyName("visible_to_user_ids")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<string>? VisibleToUserIds { get; set; }

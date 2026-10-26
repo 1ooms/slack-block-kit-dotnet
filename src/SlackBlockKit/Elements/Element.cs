@@ -1,13 +1,13 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using SlackBlockKit.CompositionObjects.TextObjects;
 using SlackBlockKit.Elements.MultiSelectMenu;
 using SlackBlockKit.Elements.SelectMenu;
-using SlackBlockKit.TextObjects;
 
 namespace SlackBlockKit.Elements;
 
 /// <summary>
-/// Base class for all Slack Block Kit interactive and input elements.
+/// Base class for all Slack Block Kit elements.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements">Slack Block Elements Documentation</seealso>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
@@ -65,6 +65,22 @@ namespace SlackBlockKit.Elements;
 [JsonDerivedType(typeof(ChannelsSelect), "channels_select")]
 public abstract class Element
 {
+    [JsonIgnore] public abstract string Type { get; }
+}
+
+/// <summary>
+/// Defines an element that has an interactive or input action identifier.
+/// </summary>
+public interface IActionElement
+{
+    string? ActionId { get; set; }
+}
+
+/// <summary>
+/// Base class for Slack Block Kit interactive and input elements that define an action_id.
+/// </summary>
+public abstract class ActionElement : Element, IActionElement
+{
     private const int MaxActionIdLength = 255;
 
     [JsonPropertyName("action_id")]
@@ -81,8 +97,6 @@ public abstract class Element
             field = value;
         }
     }
-
-    [JsonIgnore] public abstract string Type { get; }
 }
 
 /// <summary>
