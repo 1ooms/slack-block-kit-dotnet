@@ -1,32 +1,56 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using SlackBlockKit.CompositionObjects;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.Elements;
 
-public class EmailInputElement : Element, IInputElement
+/// <summary>
+/// Represents an email input element that allows users to enter an email address into a single-line field.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/email-input-element">Slack Email Input Element Documentation</seealso>
+public partial class EmailInputElement : ActionElement, IInputElement
 {
-    [JsonIgnore] private const int MaxPlaceholderLength = 150;
+    private const int MaxPlaceholderLength = 150;
 
-    [JsonPropertyName("dispatch_action_config")] [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public DispatchActionConfigurationObject? DispatchActionConfig;
-
-    [JsonPropertyName("focus_on_load")] [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? FocusOnLoad;
-
-    [JsonPropertyName("initial_value")] [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? InitialValue;
-
-    public EmailInputElement(bool? focusOnLoad = null, string? initialValue = null,
-        DispatchActionConfigurationObject? dispatchActionConfig = null, PlainTextObject? placeholder = null)
+    public EmailInputElement(
+        string? actionId = null,
+        string? initialValue = null,
+        DispatchActionConfigurationObject? dispatchActionConfig = null,
+        bool? focusOnLoad = null,
+        PlainTextObject? placeholder = null)
     {
-        FocusOnLoad = focusOnLoad;
+        ActionId = actionId;
         InitialValue = initialValue;
         DispatchActionConfig = dispatchActionConfig;
+        FocusOnLoad = focusOnLoad;
         Placeholder = placeholder;
     }
 
     public override string Type => "email_text_input";
+
+    [JsonPropertyName("initial_value")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? InitialValue
+    {
+        get;
+        set
+        {
+            if (value != null && !EmailRegex().IsMatch(value))
+                throw new ArgumentException(
+                    $@"Invalid Email '{value}'. Email must match regex pattern '^[\w-\.]+@([\w-]+\.)+[\w-]{{2,4}}$'.",
+                    nameof(value));
+            field = value;
+        }
+    }
+
+    [JsonPropertyName("dispatch_action_config")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public DispatchActionConfigurationObject? DispatchActionConfig { get; set; }
+
+    [JsonPropertyName("focus_on_load")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? FocusOnLoad { get; set; }
 
     [JsonPropertyName("placeholder")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -35,8 +59,15 @@ public class EmailInputElement : Element, IInputElement
         get;
         set
         {
-            value?.MaxLength = MaxPlaceholderLength;
+            if (value != null)
+            {
+                ThrowIfExceedsLength(value.Text, MaxPlaceholderLength);
+            }
+
             field = value;
         }
     }
+
+    [GeneratedRegex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
+    private static partial Regex EmailRegex();
 }
