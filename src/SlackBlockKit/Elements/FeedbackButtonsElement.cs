@@ -25,22 +25,14 @@ public class FeedbackButtonsElement : ActionElement, IContextActionsElement
     public FeedbackButtonObject PositiveButton
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("negative_button")]
     public FeedbackButtonObject NegativeButton
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 }
 
@@ -82,12 +74,7 @@ public class FeedbackButtonObject
     public string Value
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value);
-            ThrowIfExceedsLength(value, MaxValueLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmptyOrExceedsLength(value, MaxValueLength);
     }
 
     [JsonPropertyName("accessibility_label")]
@@ -95,14 +82,6 @@ public class FeedbackButtonObject
     public string? AccessibilityLabel
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
     }
 }

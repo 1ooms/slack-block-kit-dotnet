@@ -27,11 +27,7 @@ public class FileElement : Element, IRichTextSubElement
     public string FileId
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("text")]
@@ -39,15 +35,7 @@ public class FileElement : Element, IRichTextSubElement
     public string? Text
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfNullOrEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("url")]
@@ -55,15 +43,7 @@ public class FileElement : Element, IRichTextSubElement
     public string? Url
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfNullOrEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("is_skill_invocation")]

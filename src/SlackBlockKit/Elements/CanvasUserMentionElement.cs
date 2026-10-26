@@ -19,8 +19,6 @@ public class CanvasUserMentionElement : Element, IRichTextSubElement
         Style = style;
     }
 
-    public override string Type => "canvas_user_mention";
-
     [JsonPropertyName("user_id")]
     public string UserId
     {
@@ -33,18 +31,12 @@ public class CanvasUserMentionElement : Element, IRichTextSubElement
     public string? ThreadId
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("style")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public RichTextStyle? Style { get; set; }
+
+    public override string Type => "canvas_user_mention";
 }

@@ -35,12 +35,7 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
     public List<OptionObject> Options
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value);
-            ThrowIfExceedsCount(value, MaxOptions);
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);
     }
 
     [JsonPropertyName("initial_options")]

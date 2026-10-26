@@ -21,17 +21,11 @@ public class ChannelElement : Element, IRichTextSubElement
         FromLlm = fromLlm;
     }
 
-    public override string Type => "channel";
-
     [JsonPropertyName("channel_id")]
     public string ChannelId
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("tab_id")]
@@ -49,4 +43,6 @@ public class ChannelElement : Element, IRichTextSubElement
     [JsonPropertyName("from_llm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? FromLlm { get; set; }
+
+    public override string Type => "channel";
 }

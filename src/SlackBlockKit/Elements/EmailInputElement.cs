@@ -57,15 +57,7 @@ public partial class EmailInputElement : ActionElement, IInputElement
     public PlainTextObject? Placeholder
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfExceedsLength(value.Text, MaxPlaceholderLength);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfExceedsLength(value, MaxPlaceholderLength);
     }
 
     [GeneratedRegex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]

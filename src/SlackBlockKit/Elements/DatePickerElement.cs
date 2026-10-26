@@ -32,7 +32,7 @@ public class DatePickerElement : ActionElement, IActionsElement, IInputElement, 
 
     [JsonPropertyName("initial_date")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? InitialDateString => InitialDate?.ToString("yyyy-MM-dd");
+    private string? InitialDateString => InitialDate?.ToString("yyyy-MM-dd");
 
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -47,14 +47,6 @@ public class DatePickerElement : ActionElement, IActionsElement, IInputElement, 
     public PlainTextObject? Placeholder
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfExceedsLength(value.Text, MaxPlaceholderLength);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfExceedsLength(value, MaxPlaceholderLength);
     }
 }

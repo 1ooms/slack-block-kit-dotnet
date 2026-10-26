@@ -49,15 +49,7 @@ public class IconButtonElement : ActionElement, IContextActionsElement
     public string? Value
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("confirm")]
@@ -69,15 +61,7 @@ public class IconButtonElement : ActionElement, IContextActionsElement
     public string? AccessibilityLabel
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
     }
 
     [JsonPropertyName("visible_to_user_ids")]

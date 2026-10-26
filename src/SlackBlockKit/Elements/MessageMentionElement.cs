@@ -31,22 +31,14 @@ public class MessageMentionElement : Element, IRichTextSubElement
     public string ChannelId
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("message_ts")]
     public string MessageTs
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("author_id")]
@@ -54,15 +46,7 @@ public class MessageMentionElement : Element, IRichTextSubElement
     public string? AuthorId
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("thread_ts")]
@@ -74,15 +58,7 @@ public class MessageMentionElement : Element, IRichTextSubElement
     public string? Text
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("url")]
@@ -90,15 +66,7 @@ public class MessageMentionElement : Element, IRichTextSubElement
     public string? Url
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("style")]

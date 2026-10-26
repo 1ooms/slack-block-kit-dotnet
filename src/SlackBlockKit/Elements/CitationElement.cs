@@ -25,8 +25,6 @@ public class CitationElement : Element, IRichTextSubElement
         IsSlackUrl = isSlackUrl;
     }
 
-    public override string Type => "citation";
-
     [JsonPropertyName("url")]
     public string Url
     {
@@ -45,15 +43,10 @@ public class CitationElement : Element, IRichTextSubElement
     public int Index
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
-    [JsonPropertyName("details")]
-    public CitationDetails Details { get; set; }
+    [JsonPropertyName("details")] public CitationDetails Details { get; set; }
 
     [JsonPropertyName("from_llm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -62,4 +55,6 @@ public class CitationElement : Element, IRichTextSubElement
     [JsonPropertyName("is_slack_url")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? IsSlackUrl { get; set; }
+
+    public override string Type => "citation";
 }

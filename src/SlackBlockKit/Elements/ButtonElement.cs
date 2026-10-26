@@ -53,11 +53,7 @@ public class ButtonElement : ActionElement, IActionsElement, ISectionElement
     public PlainTextObject Text
     {
         get;
-        set
-        {
-            ThrowIfExceedsLength(value.Text, MaxTextLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmptyOrExceedsLength(value.Text, MaxTextLength);
     }
 
     [JsonPropertyName("url")]
@@ -65,16 +61,7 @@ public class ButtonElement : ActionElement, IActionsElement, ISectionElement
     public string? Url
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-                ThrowIfExceedsLength(value, MaxUrlLength);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmptyOrExceedsLength(value, MaxUrlLength);
     }
 
     [JsonPropertyName("value")]
@@ -82,16 +69,7 @@ public class ButtonElement : ActionElement, IActionsElement, ISectionElement
     public string? Value
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-                ThrowIfExceedsLength(value, MaxValueLength);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmptyOrExceedsLength(value, MaxValueLength);
     }
 
     [JsonPropertyName("style")]
@@ -107,14 +85,6 @@ public class ButtonElement : ActionElement, IActionsElement, ISectionElement
     public string? AccessibilityLabel
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
     }
 }

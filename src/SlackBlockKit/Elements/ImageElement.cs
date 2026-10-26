@@ -27,11 +27,7 @@ public class ImageElement : Element, IContextElement, ISectionElement
     public string AltText
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("image_url")]
@@ -42,13 +38,7 @@ public class ImageElement : Element, IContextElement, ISectionElement
         set
         {
             ValidateAtLeastOne(value, SlackFile);
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-                ThrowIfExceedsLength(value, MaxImageUrlLength);
-            }
-
-            field = value;
+            field = ThrowIfEmptyOrExceedsLength(value, MaxImageUrlLength);
         }
     }
 

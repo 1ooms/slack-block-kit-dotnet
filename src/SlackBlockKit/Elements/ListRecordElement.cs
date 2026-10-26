@@ -37,15 +37,7 @@ public class ListRecordElement : Element, IRichTextSubElement
     public string? RecordId
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("view_id")]
@@ -53,15 +45,7 @@ public class ListRecordElement : Element, IRichTextSubElement
     public string? ViewId
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("text")]
@@ -69,15 +53,7 @@ public class ListRecordElement : Element, IRichTextSubElement
     public string? Text
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("url")]
@@ -85,15 +61,7 @@ public class ListRecordElement : Element, IRichTextSubElement
     public string? Url
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-            }
-
-            field = value;
-        }
+        set => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("style")]

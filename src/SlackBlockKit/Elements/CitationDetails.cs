@@ -14,8 +14,7 @@ namespace SlackBlockKit.Elements;
 [JsonDerivedType(typeof(MemoryCitationDetails), "memory")]
 public abstract class CitationDetails
 {
-    [JsonIgnore]
-    public abstract string CitationType { get; }
+    [JsonIgnore] public abstract string CitationType { get; }
 }
 
 /// <summary>
@@ -35,11 +34,7 @@ public class FileCitationDetails : CitationDetails
     public string FileId
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("descriptor")]
@@ -64,21 +59,18 @@ public class ExternalCitationDetails : CitationDetails
     public string AppName
     {
         get;
+        set => field = ThrowIfNull(value);
+    }
+
+    [JsonPropertyName("app_icon_url")]
+    public string AppIconUrl
+    {
+        get;
         set
         {
             ArgumentNullException.ThrowIfNull(value);
             field = value;
         }
-    }
-
-    [JsonPropertyName("app_icon_url")]
-    public string AppIconUrl { 
-        get; 
-        set        
-        { 
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        } 
     }
 }
 
@@ -100,11 +92,7 @@ public class WebCitationDetails : CitationDetails
     public string DisplayName
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("title")]
@@ -129,18 +117,13 @@ public class MessageCitationDetails : CitationDetails
 
     public override string CitationType => "message";
 
-    [JsonPropertyName("channel")]
-    public string Channel { get; set; }
+    [JsonPropertyName("channel")] public string Channel { get; set; }
 
     [JsonPropertyName("message_ts")]
     public string MessageTs
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 }
 
@@ -160,10 +143,6 @@ public class MemoryCitationDetails : CitationDetails
     public string MemoryId
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 }
