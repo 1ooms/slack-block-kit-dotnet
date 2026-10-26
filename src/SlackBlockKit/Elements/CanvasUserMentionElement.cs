@@ -12,13 +12,11 @@ public class CanvasUserMentionElement : Element, IRichTextSubElement
     public CanvasUserMentionElement(
         string userId,
         string? threadId = null,
-        RichTextStyle? style = null,
-        string? actionId = null)
+        RichTextStyle? style = null)
     {
         UserId = userId;
         ThreadId = threadId;
         Style = style;
-        ActionId = actionId;
     }
 
     public override string Type => "canvas_user_mention";

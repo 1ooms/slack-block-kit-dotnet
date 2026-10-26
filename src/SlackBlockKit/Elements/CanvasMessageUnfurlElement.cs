@@ -12,13 +12,11 @@ public class CanvasMessageUnfurlElement : Element, IRichTextSubElement
     public CanvasMessageUnfurlElement(
         string rootMessageTs,
         string rootMessageChannel,
-        RichTextStyle? style = null,
-        string? actionId = null)
+        RichTextStyle? style = null)
     {
         RootMessageTs = rootMessageTs;
         RootMessageChannel = rootMessageChannel;
         Style = style;
-        ActionId = actionId;
     }
 
     public override string Type => "canvas_message_unfurl";

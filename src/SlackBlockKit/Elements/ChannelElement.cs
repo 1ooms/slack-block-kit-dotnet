@@ -13,14 +13,12 @@ public class ChannelElement : Element, IRichTextSubElement
         string channelId,
         string? tabId = null,
         RichTextStyle? style = null,
-        bool? fromLlm = null,
-        string? actionId = null)
+        bool? fromLlm = null)
     {
         ChannelId = channelId;
         TabId = tabId;
         Style = style;
         FromLlm = fromLlm;
-        ActionId = actionId;
     }
 
     public override string Type => "channel";

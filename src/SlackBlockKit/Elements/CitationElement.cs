@@ -15,8 +15,7 @@ public class CitationElement : Element, IRichTextSubElement
         int index,
         CitationDetails details,
         bool? fromLlm = null,
-        bool? isSlackUrl = null,
-        string? actionId = null)
+        bool? isSlackUrl = null)
     {
         Url = url;
         Text = text;
@@ -24,7 +23,6 @@ public class CitationElement : Element, IRichTextSubElement
         Details = details;
         FromLlm = fromLlm;
         IsSlackUrl = isSlackUrl;
-        ActionId = actionId;
     }
 
     public override string Type => "citation";

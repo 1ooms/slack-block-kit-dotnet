@@ -17,8 +17,7 @@ public class CanvasElement : Element, IRichTextSubElement
         string? text = null,
         string? url = null,
         bool? isSkillInvocation = null,
-        RichTextStyle? style = null,
-        string? actionId = null)
+        RichTextStyle? style = null)
     {
         FileId = fileId;
         Label = label;
@@ -28,7 +27,6 @@ public class CanvasElement : Element, IRichTextSubElement
         Url = url;
         IsSkillInvocation = isSkillInvocation;
         Style = style;
-        ActionId = actionId;
     }
 
     public override string Type => "canvas";

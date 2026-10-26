@@ -20,11 +20,10 @@ public enum BroadcastRange
 public class BroadcastElement : Element, IRichTextSubElement
 {
     [JsonConstructor]
-    public BroadcastElement(BroadcastRange range, RichTextStyle? style = null, string? actionId = null)
+    public BroadcastElement(BroadcastRange range, RichTextStyle? style = null)
     {
         Range = range;
         Style = style;
-        ActionId = actionId;
     }
 
     public override string Type => "broadcast";
