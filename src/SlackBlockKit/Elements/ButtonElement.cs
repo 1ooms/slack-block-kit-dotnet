@@ -1,11 +1,18 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.CompositionObjects;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.Elements;
 
+/// <summary>
+/// Represents an interactive button element that allows users a direct path to performing basic actions.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/button-element">Slack Button Element Documentation</seealso>
 public class ButtonElement : Element, IActionsElement, ISectionElement
 {
+    /// <summary>
+    /// Specifies the visual style of a button element.
+    /// </summary>
     public enum ButtonStyle
     {
         Primary,
@@ -14,11 +21,17 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
 
     private const int MaxValueLength = 2000;
     private const int MaxUrlLength = 3000;
-
     private const int MaxAccessibilityLabelLength = 75;
+    private const int MaxTextLength = 75;
 
-    public ButtonElement(PlainTextObject text, string? actionId = null, string? value = null, string? url = null,
-        ButtonStyle? style = null, ConfirmationDialogObject? confirm = null, string? accessibilityLabel = null)
+    public ButtonElement(
+        PlainTextObject text,
+        string? actionId = null,
+        string? value = null,
+        string? url = null,
+        ButtonStyle? style = null,
+        ConfirmationDialogObject? confirm = null,
+        string? accessibilityLabel = null)
     {
         Text = text;
         ActionId = actionId;
@@ -29,9 +42,23 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
         AccessibilityLabel = accessibilityLabel;
     }
 
+    public ButtonElement(string text, string? actionId = null, string? value = null, ButtonStyle? style = null)
+        : this(new PlainTextObject(text), actionId, value, null, style)
+    {
+    }
+
     public override string Type => "button";
 
-    [JsonPropertyName("text")] public PlainTextObject Text { get; set; }
+    [JsonPropertyName("text")]
+    public PlainTextObject Text
+    {
+        get;
+        set
+        {
+            ThrowIfExceedsLength(value.Text, MaxTextLength);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("url")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -40,8 +67,11 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
         get;
         set
         {
-            if (value != null && value.Length > MaxUrlLength)
-                throw new ArgumentException($"Url cannot be longer than {MaxUrlLength} characters.", nameof(value));
+            if (value != null)
+            {
+                ThrowIfEmpty(value);
+                ThrowIfExceedsLength(value, MaxUrlLength);
+            }
             field = value;
         }
     }
@@ -53,17 +83,18 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
         get;
         set
         {
-            if (value != null && value.Length > MaxValueLength)
-                throw new ArgumentException($"Value cannot be longer than {MaxValueLength} characters.", nameof(value));
+            if (value != null)
+            {
+                ThrowIfEmpty(value);
+                ThrowIfExceedsLength(value, MaxValueLength);
+            }
             field = value;
         }
     }
 
     [JsonPropertyName("style")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? StyleString => Style?.ToString().ToLowerInvariant();
-
-    [JsonIgnore] public ButtonStyle? Style { get; set; }
+    public ButtonStyle? Style { get; set; }
 
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -76,11 +107,10 @@ public class ButtonElement : Element, IActionsElement, ISectionElement
         get;
         set
         {
-            if (value != null && value.Length > MaxAccessibilityLabelLength)
-                throw new ArgumentException(
-                    $"AccessibilityLabel cannot be longer than {MaxAccessibilityLabelLength} characters.",
-                    nameof(value));
-
+            if (value != null)
+            {
+                ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
+            }
             field = value;
         }
     }
