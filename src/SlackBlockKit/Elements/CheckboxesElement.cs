@@ -1,21 +1,32 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.CompositionObjects;
 
 namespace SlackBlockKit.Elements;
 
+/// <summary>
+/// Represents a checkboxes element that allows users to choose multiple items from a list of options.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/checkboxes-element">Slack Checkboxes Element Documentation</seealso>
 public class CheckboxesElement : Element, IActionsElement, IInputElement, ISectionElement
 {
     private const int MaxOptions = 10;
 
-    public CheckboxesElement(List<OptionObject> options, string? actionId = null, bool? focusOnLoad = null, List<OptionObject>? initialOptions = null,
-        ConfirmationDialogObject? confirm = null)
+    public CheckboxesElement(
+        List<OptionObject> options,
+        string? actionId = null,
+        bool? focusOnLoad = null,
+        List<OptionObject>? initialOptions = null,
+        ConfirmationDialogObject? confirm = null,
+        List<string>? visibleToUserIds = null)
     {
+        ValidateInitialOptions(options, initialOptions);
+
         Options = options;
         ActionId = actionId;
         FocusOnLoad = focusOnLoad;
         InitialOptions = initialOptions;
         Confirm = confirm;
-        ValidateInitialOptions();
+        VisibleToUserIds = visibleToUserIds;
     }
 
     public override string Type => "checkboxes";
@@ -26,8 +37,8 @@ public class CheckboxesElement : Element, IActionsElement, IInputElement, ISecti
         get;
         set
         {
-            if (value.Count > MaxOptions)
-                throw new ArgumentException($"Options cannot contain more than {MaxOptions} items.", nameof(value));
+            ThrowIfNullOrEmpty(value);  
+            ThrowIfExceedsCount(value, MaxOptions);
             field = value;
         }
     }
@@ -39,8 +50,8 @@ public class CheckboxesElement : Element, IActionsElement, IInputElement, ISecti
         get;
         set
         {
+            ValidateInitialOptions(Options, value);
             field = value;
-            ValidateInitialOptions();
         }
     }
 
@@ -51,17 +62,19 @@ public class CheckboxesElement : Element, IActionsElement, IInputElement, ISecti
     [JsonPropertyName("focus_on_load")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? FocusOnLoad { get; set; }
+    
+    [JsonPropertyName("visible_to_user_ids")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<string>? VisibleToUserIds { get; set; }
 
-    private void ValidateInitialOptions()
+    private void ValidateInitialOptions(List<OptionObject> options, List<OptionObject>? initialOptions)
     {
-        if (InitialOptions == null) return;
+        if (initialOptions == null) return;
+        ThrowIfExceedsCount(initialOptions, MaxOptions);
 
-        foreach (var initialOption in InitialOptions)
-        {
-            if (!Options.Contains(initialOption))
-            {
-                throw new ArgumentException("All items in InitialOptions must be present in Options.", nameof(InitialOptions));
-            }
-        }
+        foreach (var initialOption in initialOptions)
+            if (!options.Contains(initialOption))
+                throw new ArgumentException("All items in InitialOptions must be present in Options.",
+                    nameof(InitialOptions));
     }
 }
