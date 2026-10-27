@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.Elements;
 
 namespace SlackBlockKit.Blocks;
@@ -13,19 +13,17 @@ public class ActionsBlock : Block
         BlockId = blockId;
     }
 
+    public ActionsBlock(params IActionsElement[] elements)
+        : this(elements.ToList())
+    {
+    }
+
     public override string Type => "actions";
 
     [JsonPropertyName("elements")]
     public List<IActionsElement> Elements
     {
         get;
-        set
-        {
-            if (value.Count > MaxElements)
-                throw new ArgumentException($"ActionsBlock cannot contain more than {MaxElements} elements.",
-                    nameof(value));
-
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxElements);
     }
 }
