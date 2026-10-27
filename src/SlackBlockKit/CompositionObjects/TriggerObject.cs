@@ -17,19 +17,15 @@ public class TriggerObject : CompositionObject
     }
 
     public TriggerObject(string url, Dictionary<string, string> parameters)
-        : this(url, parameters?.Select(kv => new CustomizableInputParameter(kv.Key, kv.Value)).ToList())
+        : this(url, parameters.Select(kv => new CustomizableInputParameter(kv.Key, kv.Value)).ToList())
     {
     }
 
     [JsonPropertyName("url")]
-    public string Url 
-    { 
+    public string Url
+    {
         get;
-        set
-        { 
-            ThrowIfNullOrEmpty(value);
-            field = value;
-        } 
+        set => field = ThrowIfNullOrEmpty(value);
     }
 
     [JsonPropertyName("customizable_input_parameters")]
@@ -37,15 +33,7 @@ public class TriggerObject : CompositionObject
     public List<CustomizableInputParameter>? CustomizableInputParameters
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-                ThrowIfExceedsCount(value, MaxParameters);
-            }
-            field = value;
-        }
+        set => field = ThrowIfEmptyOrExceedsCount(value, MaxParameters);
     }
 }
 

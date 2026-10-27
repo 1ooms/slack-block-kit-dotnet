@@ -20,10 +20,6 @@ public enum ConversationType
 /// <seealso href="https://docs.slack.dev/reference/block-kit/composition-objects/conversation-filter">Slack Conversation Filter Documentation</seealso>
 public class ConversationFilterObject : CompositionObject
 {
-    private List<ConversationType>? _include;
-    private bool? _excludeExternalSharedChannels;
-    private bool? _excludeBotUsers;
-
     public ConversationFilterObject(
         List<ConversationType>? include = null,
         bool? excludeExternalSharedChannels = null,
@@ -31,20 +27,20 @@ public class ConversationFilterObject : CompositionObject
     {
         ValidateAtLeastOne(include, excludeExternalSharedChannels, excludeBotUsers);
 
-        _include = ThrowIfEmpty(include);
-        _excludeExternalSharedChannels = excludeExternalSharedChannels;
-        _excludeBotUsers = excludeBotUsers;
+        Include = include;
+        ExcludeExternalSharedChannels = excludeExternalSharedChannels;
+        ExcludeBotUsers = excludeBotUsers;
     }
 
     [JsonPropertyName("include")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<ConversationType>? Include
     {
-        get => _include;
+        get;
         set
         {
-            _include = ThrowIfEmpty(value);
-            ValidateAtLeastOne(_include, _excludeExternalSharedChannels, _excludeBotUsers);
+            ValidateAtLeastOne(value, ExcludeExternalSharedChannels, ExcludeBotUsers);
+            field = ThrowIfEmpty(value);
         }
     }
 
@@ -52,11 +48,11 @@ public class ConversationFilterObject : CompositionObject
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? ExcludeExternalSharedChannels
     {
-        get => _excludeExternalSharedChannels;
+        get;
         set
         {
-            _excludeExternalSharedChannels = value;
-            ValidateAtLeastOne(_include, _excludeExternalSharedChannels, _excludeBotUsers);
+            ValidateAtLeastOne(Include, value, ExcludeBotUsers);
+            field = value;
         }
     }
 
@@ -64,11 +60,11 @@ public class ConversationFilterObject : CompositionObject
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? ExcludeBotUsers
     {
-        get => _excludeBotUsers;
+        get;
         set
         {
-            _excludeBotUsers = value;
-            ValidateAtLeastOne(_include, _excludeExternalSharedChannels, _excludeBotUsers);
+            ValidateAtLeastOne(Include, ExcludeExternalSharedChannels, ExcludeBotUsers);
+            field = value;
         }
     }
 

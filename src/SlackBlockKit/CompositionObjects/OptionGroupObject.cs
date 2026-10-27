@@ -27,23 +27,13 @@ public class OptionGroupObject : CompositionObject
     public PlainTextObject Label
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            ThrowIfExceedsLength(value.Text, MaxLabelLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrExceedsLength(value, MaxLabelLength);
     }
 
     [JsonPropertyName("options")]
     public List<OptionObject> Options
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value);
-            ThrowIfExceedsCount(value, MaxOptions);
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);
     }
 }

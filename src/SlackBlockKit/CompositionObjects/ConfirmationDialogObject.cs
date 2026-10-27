@@ -51,48 +51,28 @@ public class ConfirmationDialogObject : CompositionObject
     public PlainTextObject Title
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value.Text);
-            ThrowIfExceedsLength(value.Text, MaxTitleLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrExceedsLength(value, MaxTitleLength);
     }
 
     [JsonPropertyName("text")]
     public TextObject Text
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value.Text);
-            ThrowIfExceedsLength(value.Text, MaxTextLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrExceedsLength(value, MaxTextLength);
     }
 
     [JsonPropertyName("confirm")]
     public PlainTextObject Confirm
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value.Text);
-            ThrowIfExceedsLength(value.Text, MaxButtonTextLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrExceedsLength(value, MaxButtonTextLength);
     }
 
     [JsonPropertyName("deny")]
     public PlainTextObject Deny
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value.Text);
-            ThrowIfExceedsLength(value.Text, MaxButtonTextLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrExceedsLength(value, MaxButtonTextLength);
     }
 
     [JsonPropertyName("style")]

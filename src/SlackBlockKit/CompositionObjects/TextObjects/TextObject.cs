@@ -13,37 +13,23 @@ namespace SlackBlockKit.CompositionObjects.TextObjects;
 public abstract class TextObject : IContextElement
 {
     private const int DefaultMaxLength = 3000;
-    private string _text;
 
     protected TextObject(string text, int maxLength = DefaultMaxLength)
     {
-        ValidateText(text, maxLength);
-        _text = text;
+        Text = text;
         MaxLength = maxLength;
     }
 
     [JsonPropertyName("text")]
     public string Text
     {
-        get => _text;
-        set
-        {
-            ValidateText(value, MaxLength);
-            _text = value;
-        }
+        get;
+        set => field = ThrowIfNullOrEmptyOrExceedsLength(value, MaxLength);
     }
 
-    [JsonIgnore] 
-    private int MaxLength { get; }
+    [JsonIgnore] private int MaxLength { get; }
 
-    [JsonIgnore]
-    public abstract string Type { get; }
-
-    private static void ValidateText(string text, int maxLength)
-    {
-        ThrowIfNullOrEmpty(text);
-        ThrowIfExceedsLength(text, maxLength);
-    }
+    [JsonIgnore] public abstract string Type { get; }
 
     public override string ToString()
     {

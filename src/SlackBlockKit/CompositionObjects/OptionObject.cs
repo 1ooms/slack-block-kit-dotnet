@@ -31,24 +31,14 @@ public class OptionObject : CompositionObject
     public TextObject Text
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            ThrowIfExceedsLength(value.Text, MaxTextLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrExceedsLength(value, MaxTextLength);
     }
 
     [JsonPropertyName("value")]
     public string Value
     {
         get;
-        set
-        {
-            ThrowIfNullOrEmpty(value);
-            ThrowIfExceedsLength(value, MaxValueLength);
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmptyOrExceedsLength(value, MaxTextLength);
     }
 
     [JsonPropertyName("description")]
@@ -56,14 +46,7 @@ public class OptionObject : CompositionObject
     public PlainTextObject? Description
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfExceedsLength(value.Text, MaxDescriptionLength);
-            }
-            field = value;
-        }
+        set => field = ThrowIfExceedsLength(value, MaxDescriptionLength);
     }
 
     [JsonPropertyName("url")]
@@ -71,14 +54,6 @@ public class OptionObject : CompositionObject
     public string? Url
     {
         get;
-        set
-        {
-            if (value != null)
-            {
-                ThrowIfEmpty(value);
-                ThrowIfExceedsLength(value, MaxUrlLength);
-            }
-            field = value;
-        }
+        set => field = ThrowIfEmptyOrExceedsLength(value, MaxDescriptionLength);
     }
 }

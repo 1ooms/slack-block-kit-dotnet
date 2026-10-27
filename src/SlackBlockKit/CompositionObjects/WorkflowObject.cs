@@ -12,7 +12,7 @@ public class WorkflowObject : CompositionObject
     {
         Trigger = trigger;
     }
-    
+
     public WorkflowObject(string triggerUrl, List<CustomizableInputParameter>? parameters = null)
         : this(new TriggerObject(triggerUrl, parameters))
     {
@@ -27,10 +27,6 @@ public class WorkflowObject : CompositionObject
     public TriggerObject Trigger
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 }
