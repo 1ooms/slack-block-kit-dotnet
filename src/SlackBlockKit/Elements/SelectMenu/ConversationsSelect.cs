@@ -8,10 +8,8 @@ namespace SlackBlockKit.Elements.SelectMenu;
 /// Represents a select menu element that allows selecting from a list of public/private channels, DMs, or MPIMs.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/select-menu-element#conversations_select">Slack Conversations Select Menu Documentation</seealso>
-public class ConversationsSelect : ActionElement, IActionsElement, IInputElement, ISectionElement
+public class ConversationsSelect : SelectMenuBase
 {
-    private const int MaxPlaceholderLength = 150;
-
     public ConversationsSelect(
         string? actionId = null,
         string? initialConversation = null,
@@ -21,26 +19,15 @@ public class ConversationsSelect : ActionElement, IActionsElement, IInputElement
         ConversationFilterObject? filter = null,
         bool? focusOnLoad = null,
         PlainTextObject? placeholder = null)
+        : base(actionId, placeholder, confirm, focusOnLoad)
     {
-        ActionId = actionId;
         InitialConversation = initialConversation;
         DefaultToCurrentConversation = defaultToCurrentConversation;
-        Confirm = confirm;
-        ResponseUrlEnabled = responseUrlEnabled;
         Filter = filter;
-        FocusOnLoad = focusOnLoad;
-        Placeholder = placeholder;
+        ResponseUrlEnabled = responseUrlEnabled;
     }
 
     public override string Type => "conversations_select";
-
-    [JsonPropertyName("placeholder")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public PlainTextObject? Placeholder
-    {
-        get;
-        set => field = ThrowIfExceedsLength(value, MaxPlaceholderLength);
-    }
 
     [JsonPropertyName("initial_conversation")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -57,12 +44,4 @@ public class ConversationsSelect : ActionElement, IActionsElement, IInputElement
     [JsonPropertyName("response_url_enabled")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? ResponseUrlEnabled { get; set; }
-
-    [JsonPropertyName("confirm")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ConfirmationDialogObject? Confirm { get; set; }
-
-    [JsonPropertyName("focus_on_load")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? FocusOnLoad { get; set; }
 }

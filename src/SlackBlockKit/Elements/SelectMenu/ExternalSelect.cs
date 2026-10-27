@@ -8,10 +8,8 @@ namespace SlackBlockKit.Elements.SelectMenu;
 /// Represents a select menu element with an external data source dynamically loaded via typeahead.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/select-menu-element#external_select">Slack External Select Menu Documentation</seealso>
-public class ExternalSelect : ActionElement, IActionsElement, IInputElement, ISectionElement
+public class ExternalSelect : SelectMenuBase
 {
-    private const int MaxPlaceholderLength = 150;
-
     public ExternalSelect(
         string? actionId = null,
         OptionObject? initialOption = null,
@@ -19,24 +17,13 @@ public class ExternalSelect : ActionElement, IActionsElement, IInputElement, ISe
         ConfirmationDialogObject? confirm = null,
         bool? focusOnLoad = null,
         PlainTextObject? placeholder = null)
+        : base(actionId, placeholder, confirm, focusOnLoad)
     {
-        ActionId = actionId;
         InitialOption = initialOption;
         MinQueryLength = minQueryLength;
-        Confirm = confirm;
-        FocusOnLoad = focusOnLoad;
-        Placeholder = placeholder;
     }
 
     public override string Type => "external_select";
-
-    [JsonPropertyName("placeholder")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public PlainTextObject? Placeholder
-    {
-        get;
-        set => field = ThrowIfExceedsLength(value, MaxPlaceholderLength);
-    }
 
     [JsonPropertyName("initial_option")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -45,12 +32,4 @@ public class ExternalSelect : ActionElement, IActionsElement, IInputElement, ISe
     [JsonPropertyName("min_query_length")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? MinQueryLength { get; set; }
-
-    [JsonPropertyName("confirm")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ConfirmationDialogObject? Confirm { get; set; }
-
-    [JsonPropertyName("focus_on_load")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? FocusOnLoad { get; set; }
 }

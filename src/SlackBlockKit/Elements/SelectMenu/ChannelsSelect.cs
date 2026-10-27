@@ -8,10 +8,8 @@ namespace SlackBlockKit.Elements.SelectMenu;
 /// Represents a select menu element that allows selecting from a list of public channels in the workspace.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/select-menu-element#channels_select">Slack Channels Select Menu Documentation</seealso>
-public class ChannelsSelect : ActionElement, IActionsElement, IInputElement, ISectionElement
+public class ChannelsSelect : SelectMenuBase
 {
-    private const int MaxPlaceholderLength = 150;
-
     public ChannelsSelect(
         string? actionId = null,
         string? initialChannel = null,
@@ -19,24 +17,13 @@ public class ChannelsSelect : ActionElement, IActionsElement, IInputElement, ISe
         bool? responseUrlEnabled = null,
         bool? focusOnLoad = null,
         PlainTextObject? placeholder = null)
+        : base(actionId, placeholder, confirm, focusOnLoad)
     {
-        ActionId = actionId;
         InitialChannel = initialChannel;
-        Confirm = confirm;
         ResponseUrlEnabled = responseUrlEnabled;
-        FocusOnLoad = focusOnLoad;
-        Placeholder = placeholder;
     }
 
     public override string Type => "channels_select";
-
-    [JsonPropertyName("placeholder")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public PlainTextObject? Placeholder
-    {
-        get;
-        set => field = ThrowIfExceedsLength(value, MaxPlaceholderLength);
-    }
 
     [JsonPropertyName("initial_channel")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -45,12 +32,4 @@ public class ChannelsSelect : ActionElement, IActionsElement, IInputElement, ISe
     [JsonPropertyName("response_url_enabled")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? ResponseUrlEnabled { get; set; }
-
-    [JsonPropertyName("confirm")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ConfirmationDialogObject? Confirm { get; set; }
-
-    [JsonPropertyName("focus_on_load")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? FocusOnLoad { get; set; }
 }
