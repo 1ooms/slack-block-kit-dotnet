@@ -23,11 +23,7 @@ public class RichTextSectionElement : IRichTextElement
     public List<IRichTextSubElement> Elements
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     public string Type => "rich_text_section";

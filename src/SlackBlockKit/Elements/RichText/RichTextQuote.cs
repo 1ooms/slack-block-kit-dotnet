@@ -24,11 +24,7 @@ public class RichTextQuoteElement : IRichTextElement
     public List<IRichTextSubElement> Elements
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("border")]

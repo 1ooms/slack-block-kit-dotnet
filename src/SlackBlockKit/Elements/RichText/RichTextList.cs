@@ -28,7 +28,7 @@ public class RichTextListElement : IRichTextElement
         Offset = offset;
         Border = border;
     }
-    
+
     public RichTextListElement(RichTextListStyle style, params RichTextSectionElement[] elements)
         : this(elements.ToList(), style)
     {
@@ -39,18 +39,14 @@ public class RichTextListElement : IRichTextElement
     {
     }
 
-    
+
     [JsonPropertyName("style")] public RichTextListStyle Style { get; set; }
 
     [JsonPropertyName("elements")]
     public List<RichTextSectionElement> Elements
     {
         get;
-        set
-        {
-            ArgumentNullException.ThrowIfNull(value);
-            field = value;
-        }
+        set => field = ThrowIfNull(value);
     }
 
     [JsonPropertyName("indent")]
