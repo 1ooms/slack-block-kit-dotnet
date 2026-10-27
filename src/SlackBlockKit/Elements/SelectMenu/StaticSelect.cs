@@ -61,12 +61,7 @@ public class StaticSelect : ActionElement, IActionsElement, IInputElement, ISect
     public List<OptionObject>? Options
     {
         get;
-        set
-        {
-            ValidateAtLeastOneAndNotBoth(value, OptionGroups);
-            ValidateInitialOption(value, OptionGroups, InitialOption);
-            field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
-        }
+        init => field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
     }
 
     [JsonPropertyName("option_groups")]
@@ -74,25 +69,12 @@ public class StaticSelect : ActionElement, IActionsElement, IInputElement, ISect
     public List<OptionGroupObject>? OptionGroups
     {
         get;
-        set
-        {
-            ValidateAtLeastOneAndNotBoth(Options, value);
-            ValidateInitialOption(Options, value, InitialOption);
-            field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
-        }
+        init => field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
     }
 
     [JsonPropertyName("initial_option")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public OptionObject? InitialOption
-    {
-        get;
-        set
-        {
-            ValidateInitialOption(Options, OptionGroups, value);
-            field = value;
-        }
-    }
+    public OptionObject? InitialOption { get; init; }
 
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

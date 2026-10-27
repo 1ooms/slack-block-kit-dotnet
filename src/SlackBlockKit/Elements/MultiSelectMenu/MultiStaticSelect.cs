@@ -51,12 +51,7 @@ public class MultiStaticSelect : ActionElement, IActionsElement, IInputElement, 
     public List<OptionObject>? Options
     {
         get;
-        set
-        {
-            ValidateAtLeastOneAndNotBoth(value, OptionGroups);
-            ValidateInitialOptions(value, OptionGroups, InitialOptions);
-            field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
-        }
+        init => field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
     }
 
     [JsonPropertyName("option_groups")]
@@ -64,12 +59,7 @@ public class MultiStaticSelect : ActionElement, IActionsElement, IInputElement, 
     public List<OptionGroupObject>? OptionGroups
     {
         get;
-        set
-        {
-            ValidateAtLeastOneAndNotBoth(Options, value);
-            ValidateInitialOptions(Options, value, InitialOptions);
-            field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
-        }
+        init => field = ThrowIfEmptyOrExceedsCount(value, MaxOptions);
     }
 
     [JsonPropertyName("initial_options")]
@@ -77,11 +67,7 @@ public class MultiStaticSelect : ActionElement, IActionsElement, IInputElement, 
     public List<OptionObject>? InitialOptions
     {
         get;
-        set
-        {
-            ValidateInitialOptions(Options, OptionGroups, value);
-            field = ThrowIfExceedsCount(value, MaxOptions);
-        }
+        init => field = ThrowIfExceedsCount(value, MaxOptions);
     }
 
     [JsonPropertyName("max_selected_items")]

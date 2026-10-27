@@ -35,24 +35,12 @@ public class ImageElement : Element, IContextElement, ISectionElement
     public string? ImageUrl
     {
         get;
-        set
-        {
-            ValidateAtLeastOne(value, SlackFile);
-            field = ThrowIfEmptyOrExceedsLength(value, MaxImageUrlLength);
-        }
+        init => field = ThrowIfEmptyOrExceedsLength(value, MaxImageUrlLength);
     }
 
     [JsonPropertyName("slack_file")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SlackFileObject? SlackFile
-    {
-        get;
-        set
-        {
-            ValidateAtLeastOne(ImageUrl, value);
-            field = value;
-        }
-    }
+    public SlackFileObject? SlackFile { get; init; }
 
     public static ImageElement FromImageUrl(string altText, string imageUrl)
     {

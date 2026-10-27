@@ -22,10 +22,8 @@ public partial class SlackFileObject : CompositionObject
     public string? Id
     {
         get;
-        set
+        init
         {
-            ValidateAtLeastOneAndNotBoth(value, Url);
-
             if (value != null && !FileIdRegex().IsMatch(value))
                 throw new ArgumentException(
                     $"Invalid Slack file ID '{value}'. Slack file IDs must match regex pattern '^[F][A-Z0-9]{{8,}}$'.",
@@ -37,15 +35,7 @@ public partial class SlackFileObject : CompositionObject
 
     [JsonPropertyName("url")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Url
-    {
-        get;
-        set
-        {
-            ValidateAtLeastOneAndNotBoth(Id, value);
-            field = value;
-        }
-    }
+    public string? Url { get; init; }
 
     [GeneratedRegex(@"^F[A-Z0-9]{8,}$")]
     private static partial Regex FileIdRegex();

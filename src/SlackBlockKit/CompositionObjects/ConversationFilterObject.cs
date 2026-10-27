@@ -37,36 +37,16 @@ public class ConversationFilterObject : CompositionObject
     public List<ConversationType>? Include
     {
         get;
-        set
-        {
-            ValidateAtLeastOne(value, ExcludeExternalSharedChannels, ExcludeBotUsers);
-            field = ThrowIfEmpty(value);
-        }
+        init => field = ThrowIfEmpty(value);
     }
 
     [JsonPropertyName("exclude_external_shared_channels")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? ExcludeExternalSharedChannels
-    {
-        get;
-        set
-        {
-            ValidateAtLeastOne(Include, value, ExcludeBotUsers);
-            field = value;
-        }
-    }
+    public bool? ExcludeExternalSharedChannels { get; init; }
 
     [JsonPropertyName("exclude_bot_users")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? ExcludeBotUsers
-    {
-        get;
-        set
-        {
-            ValidateAtLeastOne(Include, ExcludeExternalSharedChannels, ExcludeBotUsers);
-            field = value;
-        }
-    }
+    public bool? ExcludeBotUsers { get; init; }
 
     private static void ValidateAtLeastOne(List<ConversationType>? include, bool? excludeExternalSharedChannels,
         bool? excludeBotUsers)
