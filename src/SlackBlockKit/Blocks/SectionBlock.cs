@@ -1,25 +1,39 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
+using SlackBlockKit.CompositionObjects.TextObjects;
 using SlackBlockKit.Elements;
-using SlackBlockKit.TextObjects;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents a section block (<c>type: "section"</c>) that displays text, two-column fields, and an optional accessory element.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/section-block">Slack Section Block Documentation</seealso>
 public class SectionBlock : Block
 {
     private const int MaxTextLength = 3000;
     private const int MaxFields = 10;
     private const int MaxFieldLength = 2000;
 
-    public SectionBlock(TextObject? text = null, List<TextObject>? fields = null, ISectionElement? accessory = null,
-        bool? expand = null)
+    public SectionBlock(
+        TextObject? text = null,
+        List<TextObject>? fields = null,
+        ISectionElement? accessory = null,
+        bool? expand = null,
+        string? blockId = null)
     {
+        if (text == null && (fields == null || fields.Count == 0))
+            throw new ArgumentException("Either text or fields must be provided for SectionBlock.");
+
         Text = text;
         Fields = fields;
         Accessory = accessory;
         Expand = expand;
+        BlockId = blockId;
+    }
 
-        if (Text == null && (Fields == null || Fields.Count == 0))
-            throw new ArgumentException("Either Text or Fields must be provided.");
+    public SectionBlock(string markdownText, ISectionElement? accessory = null, string? blockId = null)
+        : this(new MarkdownTextObject(markdownText), null, accessory, null, blockId)
+    {
     }
 
     public override string Type => "section";
@@ -29,12 +43,7 @@ public class SectionBlock : Block
     public TextObject? Text
     {
         get;
-        set
-        {
-            if (value != null && value.Text.Length > MaxTextLength)
-                throw new ArgumentException($"Text length cannot exceed {MaxTextLength} characters.");
-            field = value;
-        }
+        init => field = ThrowIfExceedsLength(value, MaxTextLength);
     }
 
     [JsonPropertyName("fields")]
@@ -42,16 +51,19 @@ public class SectionBlock : Block
     public List<TextObject>? Fields
     {
         get;
-        set
+        init
         {
-            field = value;
-            if (value == null) return;
-            if (value.Count > MaxFields)
-                throw new ArgumentException($"Number of fields cannot exceed {MaxFields}.");
+            if (value != null)
+            {
+                ThrowIfEmptyOrExceedsCount(value, MaxFields);
 
-            if (value.Any(textField => textField.Text.Length > MaxFieldLength))
-                throw new ArgumentException(
-                    $"Text length of each field cannot exceed {MaxFieldLength} characters.");
+                foreach (var text in value)
+                {
+                    ThrowIfExceedsLength(text, MaxFieldLength);
+                }
+            }
+
+            field = value;
         }
     }
 
