@@ -340,6 +340,37 @@ public static class Validation
     }
 
     /// <summary>
+    /// Determines whether the specified string is a valid absolute URL with HTTPS scheme.
+    /// </summary>
+    /// <param name="value">The string value to check.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> is a valid HTTPS URL; otherwise, <c>false</c>.</returns>
+    public static bool IsValidHttpsUrl([NotNullWhen(true)] string? value)
+    {
+        return value != null
+               && Uri.TryCreate(value, UriKind.Absolute, out var uri)
+               && uri.Scheme == Uri.UriSchemeHttps
+               && uri.Host.Length > 0
+               && Uri.IsWellFormedUriString(value, UriKind.Absolute);
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentException"/> if <paramref name="value"/> is not <c>null</c>
+    /// and is not a valid absolute URL with HTTPS scheme.
+    /// Does not throw if <paramref name="value"/> is <c>null</c>.
+    /// </summary>
+    /// <param name="value">The URL string to check.</param>
+    /// <param name="propertyName">The name of the property being validated, automatically captured.</param>
+    /// <returns>The validated URL string.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value"/> is not a valid HTTPS URL.</exception>
+    public static string? ThrowIfNotValidHttpsUrl(string? value, [CallerMemberName] string? propertyName = null)
+    {
+        if (value != null && !IsValidHttpsUrl(value))
+            throw new ArgumentException($"{propertyName} must be a valid HTTPS URL.", propertyName);
+
+        return value;
+    }
+
+    /// <summary>
     /// Throws an <see cref="ArgumentException"/> if <paramref name="value"/> is less than <paramref name="min"/>.
     /// </summary>
     /// <param name="value">The integer value to check.</param>
