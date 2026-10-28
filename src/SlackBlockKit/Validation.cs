@@ -295,6 +295,7 @@ public static class Validation
     {
         return value != null
                && Uri.TryCreate(value, UriKind.Absolute, out var uri)
+               && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps)
                && uri.Host.Length > 0
                && Uri.IsWellFormedUriString(value, UriKind.Absolute);
     }
@@ -312,6 +313,59 @@ public static class Validation
     {
         if (value != null && !IsValidUrl(value))
             throw new ArgumentException($"{propertyName} must be a valid URL.", propertyName);
+
+        return value;
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentException"/> if <paramref name="value"/> is less than <paramref name="min"/>.
+    /// </summary>
+    /// <param name="value">The integer value to check.</param>
+    /// <param name="min">The minimum allowed value (inclusive).</param>
+    /// <param name="propertyName">The name of the property being validated, automatically captured.</param>
+    /// <returns>The validated integer.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value"/> is less than <paramref name="min"/>.</exception>
+    public static int? ThrowIfLessThan(int? value, int min, [CallerMemberName] string? propertyName = null)
+    {
+        if (value != null && value < min)
+            throw new ArgumentException($"{propertyName} cannot be less than {min}.", propertyName);
+
+        return value;
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentException"/> if <paramref name="value"/> is greater than <paramref name="max"/>.
+    /// </summary>
+    /// <param name="value">The integer value to check.</param>
+    /// <param name="max">The maximum allowed value (inclusive).</param>
+    /// <param name="propertyName">The name of the property being validated, automatically captured.</param>
+    /// <returns>The validated integer.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value"/> is greater than <paramref name="max"/>.</exception>
+    public static int? ThrowIfGreaterThan(int? value, int max, [CallerMemberName] string? propertyName = null)
+    {
+        if (value != null && value > max)
+            throw new ArgumentException($"{propertyName} cannot be greater than {max}.", propertyName);
+
+        return value;
+    }
+
+    /// <summary>
+    /// Throws an <see cref="ArgumentException"/> if <paramref name="value"/> is less than <paramref name="min"/>
+    /// or greater than <paramref name="max"/>.
+    /// </summary>
+    /// <param name="value">The integer value to check.</param>
+    /// <param name="min">The minimum allowed value (inclusive).</param>
+    /// <param name="max">The maximum allowed value (inclusive).</param>
+    /// <param name="propertyName">The name of the property being validated, automatically captured.</param>
+    /// <returns>The validated integer.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="value"/> is not between <paramref name="min"/> and <paramref name="max"/>, or when <paramref name="min"/> is greater than <paramref name="max"/>.</exception>
+    public static int? ThrowIfNotBetween(int? value, int min, int max, [CallerMemberName] string? propertyName = null)
+    {
+        if (min > max)
+            throw new ArgumentException("The minimum value cannot be greater than the maximum value.", nameof(min));
+
+        if (value != null && (value < min || value > max))
+            throw new ArgumentException($"{propertyName} must be between {min} and {max}.", propertyName);
 
         return value;
     }
