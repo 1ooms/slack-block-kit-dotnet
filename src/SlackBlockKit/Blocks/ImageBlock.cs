@@ -1,25 +1,39 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.CompositionObjects;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents an image block (<c>type: "image"</c>) that displays a simple image, with an optional title and alt text.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/image-block">Slack Image Block Documentation</seealso>
 public class ImageBlock : Block
 {
     private const int MaxAltTextLength = 2000;
     private const int MaxImageUrlLength = 3000;
+    private const int MaxTitleLength = 2000;
 
-    public ImageBlock(string altText, string? imageUrl = null, SlackFileObject? slackFile = null,
-        PlainTextObject? title = null, string? blockId = null)
+    public ImageBlock(
+        string altText,
+        string? imageUrl = null,
+        SlackFileObject? slackFile = null,
+        PlainTextObject? title = null,
+        string? blockId = null)
     {
+        if (imageUrl == null && slackFile == null)
+            throw new ArgumentException("Either ImageUrl or SlackFile must be provided.");
+
         AltText = altText;
         ImageUrl = imageUrl;
         SlackFile = slackFile;
         Title = title;
         BlockId = blockId;
+    }
 
-        if (ImageUrl == null && SlackFile == null)
-            throw new ArgumentException("Either ImageUrl or SlackFile must be provided.");
+    public ImageBlock(string imageUrl, string altText, string? title = null, string? blockId = null)
+        : this(altText, imageUrl, null, title != null ? new PlainTextObject(title) : null, blockId)
+    {
     }
 
     public override string Type => "image";
@@ -28,45 +42,26 @@ public class ImageBlock : Block
     public string AltText
     {
         get;
-        set
-        {
-            if (value.Length > MaxAltTextLength)
-                throw new ArgumentException($"Text cannot be longer than {MaxAltTextLength} characters.",
-                    nameof(AltText));
-
-            field = value;
-        }
+        set => field = ThrowIfNullOrExceedsLength(value, MaxAltTextLength);
     }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("image_url")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? ImageUrl
     {
         get;
-        set
-        {
-            if (value != null && value.Length > MaxImageUrlLength)
-                throw new ArgumentException($"ImageUrl cannot be longer than {MaxImageUrlLength} characters.",
-                    nameof(ImageUrl));
-
-            field = value;
-        }
+        init => field = ThrowIfEmptyOrExceedsLength(value, MaxImageUrlLength);
     }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("slack_file")]
-    public SlackFileObject? SlackFile { get; set; }
-
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public SlackFileObject? SlackFile { get; init; }
+
     [JsonPropertyName("title")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public PlainTextObject? Title
     {
         get;
-        set
-        {
-            value?.MaxLength = 2000;
-            value?.Text = value.Text;
-            field = value;
-        }
+        set => field = ThrowIfExceedsLength(value, MaxTitleLength);
     }
 }
