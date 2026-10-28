@@ -287,6 +287,28 @@ public static class Validation
     }
 
     /// <summary>
+    /// Throws an <see cref="ArgumentNullException"/> if <paramref name="collection"/> is <c>null</c>,
+    /// or an <see cref="ArgumentException"/> if <paramref name="collection"/> contains more than <paramref name="maxCount"/> items.
+    /// </summary>
+    /// <typeparam name="TCollection">The collection type.</typeparam>
+    /// <param name="collection">The collection to validate.</param>
+    /// <param name="maxCount">The maximum allowed number of items.</param>
+    /// <param name="propertyName">The name of the property being validated, automatically captured.</param>
+    /// <returns>The validated non-null collection.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="collection"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="collection"/> contains more than <paramref name="maxCount"/> items.</exception>
+    public static TCollection ThrowIfNullOrExceedsCount<TCollection>(
+        [NotNull] TCollection? collection,
+        int maxCount,
+        [CallerMemberName] string? propertyName = null)
+        where TCollection : class, ICollection
+    {
+        ThrowIfNull(collection, propertyName);
+        ThrowIfExceedsCount(collection, maxCount, propertyName);
+        return collection;
+    }
+
+    /// <summary>
     /// Determines whether the specified string is a valid absolute URL.
     /// </summary>
     /// <param name="value">The string value to check.</param>
