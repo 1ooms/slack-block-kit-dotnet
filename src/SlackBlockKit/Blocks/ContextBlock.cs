@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.Elements;
 
 namespace SlackBlockKit.Blocks;
@@ -13,19 +13,17 @@ public class ContextBlock : Block
         BlockId = blockId;
     }
 
+    public ContextBlock(params IContextElement[] elements)
+        : this(elements.ToList())
+    {
+    }
+
     public override string Type => "context";
 
     [JsonPropertyName("elements")]
     public List<IContextElement> Elements
     {
         get;
-        set
-        {
-            if (value.Count > MaxElements)
-                throw new ArgumentException($"ContextBlock cannot contain more than {MaxElements} elements.",
-                    nameof(value));
-
-            field = value;
-        }
+        set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxElements);
     }
 }
