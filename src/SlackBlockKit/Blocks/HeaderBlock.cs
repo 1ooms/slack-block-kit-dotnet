@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using SlackBlockKit.TextObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.Blocks;
 
@@ -10,11 +10,19 @@ namespace SlackBlockKit.Blocks;
 public class HeaderBlock : Block
 {
     private const int MaxTextLength = 150;
+    private const int MinLevel = 1;
+    private const int MaxLevel = 4;
 
-    public HeaderBlock(PlainTextObject text, string? blockId = null)
+    public HeaderBlock(PlainTextObject text, string? blockId = null, int? level = null)
     {
         Text = text;
         BlockId = blockId;
+        Level = level;
+    }
+
+    public HeaderBlock(string text, string? blockId = null, int? level = null)
+        : this(new PlainTextObject(text), blockId, level)
+    {
     }
 
     public override string Type => "header";
@@ -23,13 +31,14 @@ public class HeaderBlock : Block
     public PlainTextObject Text
     {
         get;
-        set
-        {
-            if (value.Text.Length > MaxTextLength)
-                throw new ArgumentException($"Text cannot be longer than {MaxTextLength} characters.",
-                    nameof(Text));
+        set => field = ThrowIfNullOrExceedsLength(value, MaxTextLength);
+    }
 
-            field = value;
-        }
+    [JsonPropertyName("level")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public int? Level
+    {
+        get;
+        set => field = ThrowIfNotBetween(value, MinLevel, MaxLevel);
     }
 }
