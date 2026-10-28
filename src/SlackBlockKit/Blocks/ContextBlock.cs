@@ -3,6 +3,10 @@ using SlackBlockKit.Elements;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents a context block (<c>type: "context"</c>) that displays contextual information with small text and images.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/context-block">Slack Context Block Documentation</seealso>
 public class ContextBlock : Block
 {
     private const int MaxElements = 10;

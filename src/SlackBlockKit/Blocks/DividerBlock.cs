@@ -1,5 +1,9 @@
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents a visual divider block (<c>type: "divider"</c>) to cleanly separate sections within a layout.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/divider-block">Slack Divider Block Documentation</seealso>
 public class DividerBlock : Block
 {
     public DividerBlock(string? blockId = null)

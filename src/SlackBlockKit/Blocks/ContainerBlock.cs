@@ -4,19 +4,12 @@ using SlackBlockKit.Elements;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents a container block (<c>type: "container"</c>) that groups other blocks with optional collapsible controls and header styling.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/container-block">Slack Container Block Documentation</seealso>
 public class ContainerBlock : Block
 {
-    /// <summary>
-    /// Specifies the widths for a Container.
-    /// </summary>
-    public enum ContainerWidth
-    {
-        Narrow,
-        Standard,
-        Wide,
-        Full
-    }
-
     private const int MaxTitleLength = 150;
     private const int MaxSubtitleLength = 150;
     private const int MaxChildBlocks = 10;
@@ -96,4 +89,16 @@ public class ContainerBlock : Block
     [JsonPropertyName("has_header_divider")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? HasHeaderDivider { get; set; }
+}
+
+/// <summary>
+/// Specifies the width layout options for a container block.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/container-block">Slack Container Block Documentation</seealso>
+public enum ContainerWidth
+{
+    Narrow,
+    Standard,
+    Wide,
+    Full
 }

@@ -5,6 +5,10 @@ using SlackBlockKit.Elements;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents a card block (<c>type: "card"</c>) that provides a structured, hierarchical layout for information with titles, images, and actions.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/card-block">Slack Card Block Documentation</seealso>
 public class CardBlock : Block
 {
     private const int MaxTitleLength = 150;

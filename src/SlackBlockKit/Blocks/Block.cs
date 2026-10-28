@@ -2,6 +2,10 @@ using System.Text.Json.Serialization;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Base class for all Slack Block Kit layout blocks.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks">Slack Blocks Documentation</seealso>
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(ActionsBlock), "actions")]
 [JsonDerivedType(typeof(AlertBlock), "alert")]

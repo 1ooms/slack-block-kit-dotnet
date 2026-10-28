@@ -1,8 +1,12 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using SlackBlockKit.TextObjects;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents a header block (<c>type: "header"</c>) that displays larger, bold plain-text heading for content.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/header-block">Slack Header Block Documentation</seealso>
 public class HeaderBlock : Block
 {
     private const int MaxTextLength = 150;

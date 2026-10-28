@@ -3,20 +3,12 @@ using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents an alert block (<c>type: "alert"</c>) that displays a callout message with a specific severity level.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/alert-block">Slack Alert Block Documentation</seealso>
 public class AlertBlock : Block
 {
-    /// <summary>
-    /// Specifies the style of an alert block.
-    /// </summary>
-    public enum AlertLevel
-    {
-        Default,
-        Info,
-        Warning,
-        Error,
-        Success
-    }
-
     private const int MaxTextLength = 200;
 
     public AlertBlock(TextObject text, AlertLevel level = AlertLevel.Default, string? blockId = null)
@@ -41,4 +33,17 @@ public class AlertBlock : Block
     }
 
     [JsonPropertyName("level")] public AlertLevel Level { get; set; }
+}
+
+/// <summary>
+/// Specifies the severity level of an alert block.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/alert-block#levels">Slack Alert Block Documentation</seealso>
+public enum AlertLevel
+{
+    Default,
+    Info,
+    Warning,
+    Error,
+    Success
 }
