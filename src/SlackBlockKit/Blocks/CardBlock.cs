@@ -49,7 +49,7 @@ public class CardBlock : Block
     public TextObject? Title
     {
         get;
-        set => field = ThrowIfExceedsLength(value, MaxTitleLength);
+        init => field = ThrowIfExceedsLength(value, MaxTitleLength);
     }
 
     [JsonPropertyName("subtitle")]
@@ -65,7 +65,7 @@ public class CardBlock : Block
     public TextObject? Body
     {
         get;
-        set => field = ThrowIfExceedsLength(value, MaxBodyLength);
+        init => field = ThrowIfExceedsLength(value, MaxBodyLength);
     }
 
     [JsonPropertyName("subtext")]
@@ -78,7 +78,7 @@ public class CardBlock : Block
 
     [JsonPropertyName("hero_image")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ImageElement? HeroImage { get; set; }
+    public ImageElement? HeroImage { get; init; }
 
     [JsonPropertyName("icon")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -93,6 +93,6 @@ public class CardBlock : Block
     public List<ButtonElement>? Actions
     {
         get;
-        set => field = ThrowIfEmptyOrExceedsCount(value, MaxActions);
+        init => field = ThrowIfEmptyOrExceedsCount(value, MaxActions);
     }
 }
