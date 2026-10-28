@@ -1,12 +1,26 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
+using SlackBlockKit.Elements.RichText;
 
 namespace SlackBlockKit.Blocks;
 
-public class RichTextBlock(List<IRichTextElement> elements) : Block
+/// <summary>
+/// Represents a rich text block (<c>type: "rich_text"</c>) used for formatted text, quotes, code blocks, and lists.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/rich-text-block">Slack Rich Text Block Documentation</seealso>
+public class RichTextBlock : Block
 {
+    public RichTextBlock(List<IRichTextElement> elements, string? blockId = null)
+    {
+        Elements = elements;
+        BlockId = blockId;
+    }
+
     public override string Type => "rich_text";
 
-    [JsonPropertyName("elements")] public List<IRichTextElement> Elements { get; set; } = elements;
+    [JsonPropertyName("elements")]
+    public List<IRichTextElement> Elements
+    {
+        get;
+        set => field = ThrowIfNull(value);
+    }
 }
-
-public interface IRichTextElement;
