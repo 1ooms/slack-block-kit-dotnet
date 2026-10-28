@@ -1,10 +1,10 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace SlackBlockKit.Blocks;
 
 public class FileBlock : Block
 {
-    public FileBlock(string externalId, string source, string? blockId = null)
+    public FileBlock(string externalId, string source = "remote", string? blockId = null)
     {
         ExternalId = externalId;
         Source = source;
@@ -13,7 +13,17 @@ public class FileBlock : Block
 
     public override string Type => "file";
 
-    [JsonPropertyName("external_id")] public string ExternalId { get; set; }
+    [JsonPropertyName("external_id")]
+    public string ExternalId
+    {
+        get;
+        set => field = ThrowIfNull(value);
+    }
 
-    [JsonPropertyName("source")] public string Source { get; set; }
+    [JsonPropertyName("source")]
+    public string Source
+    {
+        get;
+        set => field = ThrowIfNull(value);
+    }
 }
