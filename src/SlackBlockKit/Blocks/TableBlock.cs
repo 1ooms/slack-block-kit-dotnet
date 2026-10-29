@@ -1,32 +1,45 @@
-﻿using System.Text.Json.Serialization;
-using SlackBlockKit.TextObjects;
+using System.Text.Json.Serialization;
 
 namespace SlackBlockKit.Blocks;
 
+/// <summary>
+/// Represents a Slack Table block (<c>type: "table"</c>).
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Documentation</seealso>
 public class TableBlock : Block
 {
+    public enum ColumnAlignment
+    {
+        Left,
+        Center,
+        Right
+    }
+
     private const int MaxRows = 100;
     private const int MaxColumns = 20;
 
-    public TableBlock(List<List<ITableTextObject>> rows)
+    public TableBlock(List<List<ITableCell>> rows, List<ColumnSetting>? columnSettings = null,
+        string? blockId = null)
     {
         Rows = rows;
+        ColumnSettings = columnSettings;
+        BlockId = blockId;
     }
 
     public override string Type => "table";
 
     [JsonPropertyName("rows")]
-    public List<List<ITableTextObject>> Rows
+    public List<List<ITableCell>> Rows
     {
         get;
         set
         {
-            if (value == null)
-                throw new ArgumentException("Rows cannot be null.", nameof(value));
-            if (Rows.Count > MaxRows)
-                throw new ArgumentException($"Table cannot have more than {MaxRows} rows.", nameof(value));
-            if (value.Any(row => row.Count > MaxColumns))
-                throw new ArgumentException($"Table cannot have more than {MaxColumns} columns.", nameof(value));
+            ThrowIfNullOrExceedsCount(value, MaxRows);
+            foreach (var row in value)
+            {
+                ThrowIfExceedsCount(row, MaxColumns);
+            }
+
             field = value;
         }
     }
@@ -36,29 +49,92 @@ public class TableBlock : Block
     public List<ColumnSetting>? ColumnSettings
     {
         get;
-        set
-        {
-            if (value != null && value.Count > MaxColumns)
-                throw new ArgumentException($"Column settings cannot have more than {MaxColumns} columns.",
-                    nameof(value));
-
-            field = value;
-        }
+        set => field = ThrowIfExceedsCount(value, MaxColumns);
     }
 
+    /// <summary>
+    /// Configures column alignment and wrapping for a table block.
+    /// </summary>
+    /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block/#schema-for-column_settings">Slack Table Column Settings Reference</seealso>
     public class ColumnSetting
     {
-        [JsonPropertyName("align")] public string? Align;
-
-        [JsonPropertyName("is_wrapped")] public bool? IsWrapped;
-
-        public ColumnSetting(string? align = null, bool? isWrapped = null)
+        public ColumnSetting(ColumnAlignment? align = null, bool? isWrapped = null)
         {
-            if (align != null && align != "left" && align != "center" && align != "right")
-                throw new ArgumentException("Align must be one of 'left', 'center', or 'right'.", nameof(align));
-
             Align = align;
             IsWrapped = isWrapped;
         }
+
+        [JsonPropertyName("align")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public ColumnAlignment? Align { get; set; }
+
+        [JsonPropertyName("is_wrapped")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public bool? IsWrapped { get; set; }
     }
+}
+
+/// <summary>
+/// Represents a cell in a Slack Table block.
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Reference</seealso>
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(RawTextCell), "raw_text")]
+[JsonDerivedType(typeof(RawNumberCell), "raw_number")]
+public interface ITableCell
+{
+    [JsonIgnore] string Type { get; }
+}
+
+/// <summary>
+/// Represents a raw text cell in a Slack Table block (<c>type: "raw_text"</c>).
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Reference</seealso>
+public class RawTextCell : ITableCell
+{
+    public RawTextCell(string text)
+    {
+        Text = text;
+    }
+
+    [JsonPropertyName("text")]
+    public string Text
+    {
+        get;
+        set => field = ThrowIfNullOrEmpty(value);
+    }
+
+    [JsonIgnore] public string Type => "raw_text";
+
+    public static implicit operator RawTextCell(string text) => new(text);
+}
+
+/// <summary>
+/// Represents a raw numeric cell in a Slack Table block (<c>type: "raw_number"</c>).
+/// </summary>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Reference</seealso>
+/// <remarks>This type of cell seems to be currently broken in the Slack API (29/10/2026).</remarks>
+public class RawNumberCell : ITableCell
+{
+    public RawNumberCell(double value, string text)
+    {
+        Value = value;
+        Text = text;
+    }
+
+    [JsonPropertyName("value")]
+    public double Value
+    {
+        get;
+        set => field = ThrowIfNull(value);
+    }
+
+    [JsonPropertyName("text")]
+    public string Text
+    {
+        get;
+        set => field = ThrowIfNullOrEmpty(value);
+    }
+
+    [JsonIgnore] public string Type => "raw_number";
 }
