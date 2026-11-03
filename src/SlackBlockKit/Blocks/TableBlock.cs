@@ -37,7 +37,7 @@ public class TableBlock : Block
             ThrowIfNullOrExceedsCount(value, MaxRows);
             foreach (var row in value)
             {
-                ThrowIfExceedsCount(row, MaxColumns);
+                ThrowIfNullOrEmptyOrExceedsCount(row, MaxColumns);
             }
 
             field = value;
