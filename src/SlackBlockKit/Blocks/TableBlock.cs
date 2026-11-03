@@ -81,6 +81,7 @@ public class TableBlock : Block
 [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
 [JsonDerivedType(typeof(RawTextCell), "raw_text")]
 [JsonDerivedType(typeof(RawNumberCell), "raw_number")]
+[JsonDerivedType(typeof(RichTextBlock), "rich_text")]
 public interface ITableCell
 {
     [JsonIgnore] string Type { get; }
