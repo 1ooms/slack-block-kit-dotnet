@@ -89,7 +89,7 @@ public interface ITableCell
 /// <summary>
 /// Represents a raw text cell in a Slack Table block (<c>type: "raw_text"</c>).
 /// </summary>
-/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Reference</seealso>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/data-table-block/#schema-raw-text">Slack Raw Text Cell Reference</seealso>
 public class RawTextCell : ITableCell
 {
     public RawTextCell(string text)
@@ -112,7 +112,7 @@ public class RawTextCell : ITableCell
 /// <summary>
 /// Represents a raw numeric cell in a Slack Table block (<c>type: "raw_number"</c>).
 /// </summary>
-/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Reference</seealso>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/data-table-block/#schema-raw-number">Slack Raw Number Cell Reference</seealso>
 /// <remarks>This type of cell seems to be currently broken in the Slack API (29/10/2026).</remarks>
 public class RawNumberCell : ITableCell
 {
