@@ -69,6 +69,7 @@ public class TaskCardBlock : Block
 
     [JsonPropertyName("icon")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonConverter(typeof(SlackIconConverter))]
     public SlackIcon? Icon { get; set; }
 
     [JsonPropertyName("hide_title")]
