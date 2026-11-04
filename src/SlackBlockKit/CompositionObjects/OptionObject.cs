@@ -38,7 +38,7 @@ public class OptionObject : CompositionObject
     public string Value
     {
         get;
-        set => field = ThrowIfNullOrEmptyOrExceedsLength(value, MaxTextLength);
+        set => field = ThrowIfNullOrEmptyOrExceedsLength(value, MaxValueLength);
     }
 
     [JsonPropertyName("description")]
@@ -54,6 +54,6 @@ public class OptionObject : CompositionObject
     public string? Url
     {
         get;
-        set => field = ThrowIfEmptyOrExceedsLength(value, MaxDescriptionLength);
+        set => field = ThrowIfEmptyOrExceedsLength(value, MaxUrlLength);
     }
 }
