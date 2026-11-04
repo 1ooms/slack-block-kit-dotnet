@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json.Serialization;
 using SlackBlockKit.CompositionObjects;
 using SlackBlockKit.CompositionObjects.TextObjects;
@@ -32,7 +33,7 @@ public class DatePickerElement : ActionElement, IActionsElement, IInputElement, 
 
     [JsonPropertyName("initial_date")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    private string? InitialDateString => InitialDate?.ToString("yyyy-MM-dd");
+    public string? InitialDateString => InitialDate?.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
