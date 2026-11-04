@@ -31,11 +31,6 @@ public class ImageBlock : Block
         BlockId = blockId;
     }
 
-    public ImageBlock(string imageUrl, string altText, string? title = null, string? blockId = null)
-        : this(altText, imageUrl, null, title != null ? new PlainTextObject(title) : null, blockId)
-    {
-    }
-
     public override string Type => "image";
 
     [JsonPropertyName("alt_text")]
@@ -63,5 +58,19 @@ public class ImageBlock : Block
     {
         get;
         set => field = ThrowIfExceedsLength(value, MaxTitleLength);
+    }
+
+    public static ImageBlock FromImageUrl(string altText, string imageUrl, string? title = null,
+        string? blockId = null)
+    {
+        return new ImageBlock(altText, imageUrl, title: title != null ? new PlainTextObject(title) : null,
+            blockId: blockId);
+    }
+
+    public static ImageBlock FromSlackFile(string altText, SlackFileObject slackFile, string? title = null,
+        string? blockId = null)
+    {
+        return new ImageBlock(altText, slackFile: slackFile, title: title != null ? new PlainTextObject(title) : null,
+            blockId: blockId);
     }
 }
