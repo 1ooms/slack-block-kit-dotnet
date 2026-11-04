@@ -36,7 +36,7 @@ public class PlainTextInputElement : ActionElement, IInputElement
         Placeholder = placeholder;
     }
 
-    public PlainTextInputElement(string actionId, string? placeholder = null)
+    public PlainTextInputElement(string actionId, string? placeholder)
         : this(actionId, placeholder: placeholder != null ? new PlainTextObject(placeholder) : null)
     {
     }
