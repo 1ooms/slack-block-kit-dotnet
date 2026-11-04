@@ -68,7 +68,7 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
         ThrowIfExceedsCount(initialOptions, MaxOptions);
 
         foreach (var initialOption in initialOptions)
-            if (!options.Contains(initialOption))
+            if (!options.Any(option => StaticSelectValidation.OptionMatches(option, initialOption)))
                 throw new ArgumentException("All items in InitialOptions must be present in Options.",
                     nameof(InitialOptions));
     }
