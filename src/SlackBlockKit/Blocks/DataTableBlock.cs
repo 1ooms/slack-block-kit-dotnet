@@ -109,7 +109,7 @@ public class ActionCell : IDataTableCell
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IActionCellFallbackObject? Fallback { get; set; }
 
-    [JsonPropertyName("type")] public string Type => "action_cell";
+    [JsonIgnore] public string Type => "action_cell";
 }
 
 /// <summary>
