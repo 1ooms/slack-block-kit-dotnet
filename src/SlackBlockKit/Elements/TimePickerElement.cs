@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json.Serialization;
 using SlackBlockKit.CompositionObjects;
 using SlackBlockKit.CompositionObjects.TextObjects;
@@ -34,7 +35,7 @@ public class TimePickerElement : ActionElement, IActionsElement, IInputElement, 
 
     [JsonPropertyName("initial_time")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    private string? InitialTimeString => InitialTime?.ToString("HH:mm");
+    public string? InitialTimeString => InitialTime?.ToString("HH:mm", CultureInfo.InvariantCulture);
 
     [JsonIgnore] public TimeZoneInfo? Timezone { get; set; }
 
