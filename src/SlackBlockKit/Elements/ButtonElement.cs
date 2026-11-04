@@ -53,7 +53,7 @@ public class ButtonElement : ActionElement, IActionsElement, ISectionElement
     public PlainTextObject Text
     {
         get;
-        set => field = ThrowIfNullOrEmptyOrExceedsLength(value.Text, MaxTextLength);
+        set => field = ThrowIfNullOrExceedsLength(value, MaxTextLength);
     }
 
     [JsonPropertyName("url")]
