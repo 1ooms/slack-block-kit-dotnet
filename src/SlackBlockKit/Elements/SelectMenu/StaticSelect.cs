@@ -28,18 +28,6 @@ public class StaticSelect : SelectMenuBase
         InitialOption = initialOption;
     }
 
-    public StaticSelect(
-        PlainTextObject? placeholder,
-        string? actionId = null,
-        List<OptionObject>? options = null,
-        List<OptionGroupObject>? optionGroups = null,
-        OptionObject? initialOption = null,
-        ConfirmationDialogObject? confirm = null,
-        bool? focusOnLoad = null)
-        : this(actionId, options, optionGroups, initialOption, confirm, focusOnLoad, placeholder)
-    {
-    }
-
     public override string Type => "static_select";
 
     [JsonPropertyName("options")]
