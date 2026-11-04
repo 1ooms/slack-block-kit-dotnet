@@ -20,6 +20,7 @@ public interface IRichTextElement
 /// Marks an element as valid for inclusion within a rich text section, list, or quote block element.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/rich-text-block">Slack Rich Text Block Documentation</seealso>
+[JsonConverter(typeof(InterfaceElementConverter<IRichTextSubElement>))]
 public interface IRichTextSubElement
 {
     [JsonIgnore] string Type { get; }
