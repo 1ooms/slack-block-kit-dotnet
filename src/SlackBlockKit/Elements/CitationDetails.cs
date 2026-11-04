@@ -28,7 +28,7 @@ public class FileCitationDetails : CitationDetails
         Descriptor = descriptor;
     }
 
-    public override string CitationType => "file";
+    [JsonIgnore] public override string CitationType => "file";
 
     [JsonPropertyName("file_id")]
     public string FileId
@@ -53,7 +53,7 @@ public class ExternalCitationDetails : CitationDetails
         AppIconUrl = appIconUrl;
     }
 
-    public override string CitationType => "external";
+    [JsonIgnore] public override string CitationType => "external";
 
     [JsonPropertyName("app_name")]
     public string AppName
@@ -86,7 +86,7 @@ public class WebCitationDetails : CitationDetails
         Snippet = snippet;
     }
 
-    public override string CitationType => "web";
+    [JsonIgnore] public override string CitationType => "web";
 
     [JsonPropertyName("display_name")]
     public string DisplayName
@@ -115,9 +115,14 @@ public class MessageCitationDetails : CitationDetails
         MessageTs = messageTs;
     }
 
-    public override string CitationType => "message";
+    [JsonIgnore] public override string CitationType => "message";
 
-    [JsonPropertyName("channel")] public string Channel { get; set; }
+    [JsonPropertyName("channel")]
+    public string Channel
+    {
+        get;
+        set => field = ThrowIfNull(value);
+    }
 
     [JsonPropertyName("message_ts")]
     public string MessageTs
@@ -137,7 +142,7 @@ public class MemoryCitationDetails : CitationDetails
         MemoryId = memoryId;
     }
 
-    public override string CitationType => "memory";
+    [JsonIgnore] public override string CitationType => "memory";
 
     [JsonPropertyName("memory_id")]
     public string MemoryId
