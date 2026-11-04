@@ -16,8 +16,8 @@ public abstract class TextObject : IContextElement
 
     protected TextObject(string text, int maxLength = DefaultMaxLength)
     {
-        Text = text;
         MaxLength = maxLength;
+        Text = text;
     }
 
     [JsonPropertyName("text")]
