@@ -37,13 +37,11 @@ public class AttachmentMentionElement : Element, IRichTextSubElement
         Style = style;
     }
 
-    public override string Type => "attachment_mention";
-
     [JsonPropertyName("url")]
-    public string? Url
+    public string Url
     {
         get;
-        set => field = ThrowIfEmpty(value);
+        set => field = ThrowIfNullOrEmpty(value);
     }
 
     [JsonPropertyName("text")]
@@ -125,4 +123,6 @@ public class AttachmentMentionElement : Element, IRichTextSubElement
     [JsonPropertyName("style")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public RichTextStyle? Style { get; set; }
+
+    public override string Type => "attachment_mention";
 }
