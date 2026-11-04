@@ -42,7 +42,12 @@ public class IconButtonElement : ActionElement, IContextActionsElement
 
     [JsonPropertyName("icon")] public IconButtonIcon Icon { get; set; }
 
-    [JsonPropertyName("text")] public PlainTextObject Text { get; set; }
+    [JsonPropertyName("text")]
+    public PlainTextObject Text
+    {
+        get;
+        set => field = ThrowIfNull(value);
+    }
 
     [JsonPropertyName("value")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
