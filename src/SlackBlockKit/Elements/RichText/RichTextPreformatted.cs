@@ -6,7 +6,7 @@ namespace SlackBlockKit.Elements.RichText;
 /// Represents a rich text preformatted code element.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/rich-text-preformatted-element">Slack Rich Text Preformatted Element Documentation</seealso>
-public class RichTextPreformattedElement : IRichTextElement
+public class RichTextPreformattedElement : RichTextElement
 {
     [JsonConstructor]
     public RichTextPreformattedElement(
@@ -39,5 +39,5 @@ public class RichTextPreformattedElement : IRichTextElement
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Language { get; set; }
 
-    public string Type => "rich_text_preformatted";
+    public override string Type => "rich_text_preformatted";
 }

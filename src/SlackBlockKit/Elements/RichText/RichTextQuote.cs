@@ -6,7 +6,7 @@ namespace SlackBlockKit.Elements.RichText;
 /// Represents a rich text quote element that displays a block quote.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/rich-text-quote-element">Slack Rich Text Quote Element Documentation</seealso>
-public class RichTextQuoteElement : IRichTextElement
+public class RichTextQuoteElement : RichTextElement
 {
     [JsonConstructor]
     public RichTextQuoteElement(List<IRichTextSubElement> elements, int? border = null)
@@ -31,5 +31,5 @@ public class RichTextQuoteElement : IRichTextElement
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? Border { get; set; }
 
-    public string Type => "rich_text_quote";
+    public override string Type => "rich_text_quote";
 }

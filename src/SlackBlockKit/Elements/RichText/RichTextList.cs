@@ -12,7 +12,7 @@ public enum RichTextListStyle
 /// Represents a rich text list element that displays an ordered or bulleted list of rich text items.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/rich-text-list-element">Slack Rich Text List Element Documentation</seealso>
-public class RichTextListElement : IRichTextElement
+public class RichTextListElement : RichTextElement
 {
     [JsonConstructor]
     public RichTextListElement(
@@ -61,5 +61,5 @@ public class RichTextListElement : IRichTextElement
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? Border { get; set; }
 
-    public string Type => "rich_text_list";
+    public override string Type => "rich_text_list";
 }

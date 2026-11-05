@@ -6,7 +6,7 @@ namespace SlackBlockKit.Elements.RichText;
 /// Represents a rich text section element that contains inline rich text elements.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/rich-text-section-element">Slack Rich Text Section Element Documentation</seealso>
-public class RichTextSectionElement : IRichTextElement
+public class RichTextSectionElement : RichTextElement
 {
     [JsonConstructor]
     public RichTextSectionElement(List<IRichTextSubElement> elements)
@@ -26,5 +26,5 @@ public class RichTextSectionElement : IRichTextElement
         set => field = ThrowIfNull(value);
     }
 
-    public string Type => "rich_text_section";
+    public override string Type => "rich_text_section";
 }

@@ -11,9 +11,9 @@ namespace SlackBlockKit.Elements.RichText;
 [JsonDerivedType(typeof(RichTextListElement), "rich_text_list")]
 [JsonDerivedType(typeof(RichTextPreformattedElement), "rich_text_preformatted")]
 [JsonDerivedType(typeof(RichTextQuoteElement), "rich_text_quote")]
-public interface IRichTextElement
+public abstract class RichTextElement
 {
-    [JsonIgnore] string Type { get; }
+    [JsonIgnore] public abstract string Type { get; }
 }
 
 /// <summary>

@@ -9,14 +9,14 @@ namespace SlackBlockKit.Blocks;
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/rich-text-block">Slack Rich Text Block Documentation</seealso>
 public class RichTextBlock : Block, ITableCell, IDataTableCell
 {
-    public RichTextBlock(List<IRichTextElement> elements, string? blockId = null)
+    public RichTextBlock(List<RichTextElement> elements, string? blockId = null)
     {
         Elements = elements;
         BlockId = blockId;
     }
 
     [JsonPropertyName("elements")]
-    public List<IRichTextElement> Elements
+    public List<RichTextElement> Elements
     {
         get;
         set => field = ThrowIfNull(value);
