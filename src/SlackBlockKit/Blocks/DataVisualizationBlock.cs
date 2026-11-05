@@ -10,7 +10,7 @@ public class DataVisualizationBlock : Block
 {
     private const int MaxTitleLength = 50;
 
-    public DataVisualizationBlock(string title, IChart chart, string? blockId = null)
+    public DataVisualizationBlock(string title, Chart chart, string? blockId = null)
     {
         Title = title;
         Chart = chart;
@@ -27,7 +27,7 @@ public class DataVisualizationBlock : Block
     }
 
     [JsonPropertyName("chart")]
-    public IChart Chart
+    public Chart Chart
     {
         get;
         set => field = ThrowIfNull(value);
@@ -43,16 +43,16 @@ public class DataVisualizationBlock : Block
 [JsonDerivedType(typeof(BarChart), "bar")]
 [JsonDerivedType(typeof(AreaChart), "area")]
 [JsonDerivedType(typeof(LineChart), "line")]
-public interface IChart
+public abstract class Chart
 {
-    [JsonIgnore] string Type { get; }
+    [JsonIgnore] public abstract string Type { get; }
 }
 
 /// <summary>
 /// Represents a pie chart in a data visualization block.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/data-visualization-block#pie">Slack Data Visualization Block Documentation</seealso>
-public class PieChart : IChart
+public class PieChart : Chart
 {
     public PieChart(List<ChartSegment> segments)
     {
@@ -61,14 +61,14 @@ public class PieChart : IChart
 
     [JsonPropertyName("segments")] public List<ChartSegment> Segments { get; set; } = [];
 
-    public string Type => "pie";
+    public override string Type => "pie";
 }
 
 /// <summary>
 /// Base class for charts that plot one or more data series against categories (bar, area and line charts).
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/data-visualization-block">Slack Data Visualization Block Documentation</seealso>
-public abstract class SeriesChart : IChart
+public abstract class SeriesChart : Chart
 {
     protected SeriesChart(List<ChartDataSeries> series, ChartAxisConfig axisConfig)
     {
@@ -99,8 +99,6 @@ public abstract class SeriesChart : IChart
             field = value;
         }
     }
-
-    public abstract string Type { get; }
 
     private static void ValidateCategories(List<ChartDataSeries>? series, ChartAxisConfig? axisConfig)
     {
