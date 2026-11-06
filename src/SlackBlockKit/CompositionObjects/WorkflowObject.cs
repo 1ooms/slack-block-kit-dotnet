@@ -8,6 +8,7 @@ namespace SlackBlockKit.CompositionObjects;
 /// <seealso href="https://docs.slack.dev/reference/block-kit/composition-objects/workflow">Slack Workflow Object Documentation</seealso>
 public class WorkflowObject : CompositionObject
 {
+    [JsonConstructor]
     public WorkflowObject(TriggerObject trigger)
     {
         Trigger = trigger;

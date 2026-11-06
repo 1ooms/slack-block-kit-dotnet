@@ -16,6 +16,7 @@ public class PlainTextInputElement : ActionElement, IInputElement
     private const int MinMaxLength = 1;
     private const int MaxMaxLength = 3000;
 
+    [JsonConstructor]
     public PlainTextInputElement(
         string? actionId = null,
         string? initialValue = null,

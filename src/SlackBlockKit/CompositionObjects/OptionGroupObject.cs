@@ -12,6 +12,7 @@ public class OptionGroupObject : CompositionObject
     private const int MaxLabelLength = 75;
     private const int MaxOptions = 100;
 
+    [JsonConstructor]
     public OptionGroupObject(PlainTextObject label, List<OptionObject> options)
     {
         Label = label;

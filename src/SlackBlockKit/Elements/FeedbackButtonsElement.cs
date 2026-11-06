@@ -46,6 +46,7 @@ public class FeedbackButtonObject
     private const int MaxValueLength = 2000;
     private const int MaxAccessibilityLabelLength = 75;
 
+    [JsonConstructor]
     public FeedbackButtonObject(PlainTextObject text, string value, string? accessibilityLabel = null)
     {
         Text = text;

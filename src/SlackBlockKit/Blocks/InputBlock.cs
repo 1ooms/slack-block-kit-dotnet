@@ -13,6 +13,7 @@ public class InputBlock : Block
     private const int MaxLabelLength = 2000;
     private const int MaxHintLength = 2000;
 
+    [JsonConstructor]
     public InputBlock(
         PlainTextObject label,
         IInputElement element,

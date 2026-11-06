@@ -24,6 +24,7 @@ public class ButtonElement : ActionElement, IActionsElement, ISectionElement
     private const int MaxAccessibilityLabelLength = 75;
     private const int MaxTextLength = 75;
 
+    [JsonConstructor]
     public ButtonElement(
         PlainTextObject text,
         string? actionId = null,

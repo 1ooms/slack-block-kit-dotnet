@@ -13,6 +13,7 @@ public class WorkflowButtonElement : ActionElement, IActionsElement, ISectionEle
     private const int MaxTextLength = 75;
     private const int MaxAccessibilityLabelLength = 75;
 
+    [JsonConstructor]
     public WorkflowButtonElement(
         PlainTextObject text,
         WorkflowObject workflow,

@@ -13,6 +13,7 @@ public class VideoBlock : Block
     private const int MaxDescriptionLength = 200;
     private const int MaxTitleLength = 200;
 
+    [JsonConstructor]
     public VideoBlock(
         string altText,
         PlainTextObject title,

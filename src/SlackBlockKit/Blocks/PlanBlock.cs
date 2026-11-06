@@ -10,6 +10,7 @@ public class PlanBlock : Block
 {
     private const int MaxTasks = 50;
 
+    [JsonConstructor]
     public PlanBlock(string title, List<TaskCardBlock> tasks, string? blockId = null)
     {
         Title = title;

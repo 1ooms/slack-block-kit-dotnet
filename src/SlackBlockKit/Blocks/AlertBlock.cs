@@ -11,6 +11,7 @@ public class AlertBlock : Block
 {
     private const int MaxTextLength = 200;
 
+    [JsonConstructor]
     public AlertBlock(TextObject text, AlertLevel level = AlertLevel.Default, string? blockId = null)
     {
         Text = text;

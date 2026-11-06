@@ -11,6 +11,7 @@ public class ActionsBlock : Block
 {
     private const int MaxElements = 25;
 
+    [JsonConstructor]
     public ActionsBlock(List<IActionsElement> elements, string? blockId = null)
     {
         Elements = elements;

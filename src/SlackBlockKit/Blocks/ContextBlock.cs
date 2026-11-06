@@ -11,6 +11,7 @@ public class ContextBlock : Block
 {
     private const int MaxElements = 10;
 
+    [JsonConstructor]
     public ContextBlock(List<IContextElement> elements, string? blockId = null)
     {
         Elements = elements;

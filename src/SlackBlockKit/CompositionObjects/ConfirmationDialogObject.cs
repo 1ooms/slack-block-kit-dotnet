@@ -22,6 +22,7 @@ public class ConfirmationDialogObject : CompositionObject
     private const int MaxTextLength = 300;
     private const int MaxButtonTextLength = 30;
 
+    [JsonConstructor]
     public ConfirmationDialogObject(
         PlainTextObject title,
         TextObject text,

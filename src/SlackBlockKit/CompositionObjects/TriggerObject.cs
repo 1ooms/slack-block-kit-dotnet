@@ -10,6 +10,7 @@ public class TriggerObject : CompositionObject
 {
     private const int MaxParameters = 10;
 
+    [JsonConstructor]
     public TriggerObject(string url, List<CustomizableInputParameter>? customizableInputParameters = null)
     {
         Url = url;

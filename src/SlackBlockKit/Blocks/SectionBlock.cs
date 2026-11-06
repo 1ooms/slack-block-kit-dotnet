@@ -14,6 +14,7 @@ public class SectionBlock : Block
     private const int MaxFields = 10;
     private const int MaxFieldLength = 2000;
 
+    [JsonConstructor]
     public SectionBlock(
         TextObject? text = null,
         List<TextObject>? fields = null,

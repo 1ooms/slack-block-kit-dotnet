@@ -10,6 +10,7 @@ public class CarouselBlock : Block
 {
     private const int MaxCards = 10;
 
+    [JsonConstructor]
     public CarouselBlock(List<CardBlock> elements, string? blockId = null)
     {
         Elements = elements;

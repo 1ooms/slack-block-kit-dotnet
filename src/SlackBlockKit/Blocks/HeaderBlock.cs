@@ -13,6 +13,7 @@ public class HeaderBlock : Block
     private const int MinLevel = 1;
     private const int MaxLevel = 4;
 
+    [JsonConstructor]
     public HeaderBlock(PlainTextObject text, string? blockId = null, int? level = null)
     {
         Text = text;

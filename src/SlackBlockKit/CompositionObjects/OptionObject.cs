@@ -14,6 +14,7 @@ public class OptionObject : CompositionObject
     private const int MaxDescriptionLength = 75;
     private const int MaxUrlLength = 3000;
 
+    [JsonConstructor]
     public OptionObject(TextObject text, string value, PlainTextObject? description = null, string? url = null)
     {
         Text = text;
