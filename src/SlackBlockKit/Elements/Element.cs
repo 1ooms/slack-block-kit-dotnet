@@ -69,17 +69,9 @@ public abstract class Element
 }
 
 /// <summary>
-/// Defines an element that has an interactive or input action identifier.
-/// </summary>
-public interface IActionElement
-{
-    string? ActionId { get; set; }
-}
-
-/// <summary>
 /// Base class for Slack Block Kit interactive and input elements that define an action_id.
 /// </summary>
-public abstract class ActionElement : Element, IActionElement
+public abstract class ActionElement : Element
 {
     private const int MaxActionIdLength = 255;
 
