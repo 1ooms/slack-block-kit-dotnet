@@ -4,6 +4,15 @@ using System.Text.Json.Serialization.Metadata;
 
 namespace SlackBlockKit;
 
+/// <summary>
+/// Serializes Block Kit models into the JSON Slack expects.
+/// </summary>
+/// <remarks>
+/// Always serialize Block Kit models with this class or with <see cref="Options"/>. <see cref="JsonSerializer"/>
+/// without these options either writes JSON Slack can't use (a stray <c>"Type"</c> property, numeric enums and
+/// missing <c>"type"</c> discriminators) or throws, as it does with the web defaults used by
+/// <c>PostAsJsonAsync</c> and ASP.NET Core.
+/// </remarks>
 public static class SlackSerializer
 {
     // Prevents serializing the C# public property 'Type' as a redundant uppercase "Type" JSON field.
@@ -16,30 +25,77 @@ public static class SlackSerializer
                 prop.ShouldSerialize = (_, _) => false;
     };
 
-    private static readonly JsonSerializerOptions DefaultOptions = CreateOptions(false);
+    // Makes concrete types always write their discriminator (e.g. "type": "button"), whatever type they're declared as.
+    // The effect is the same as annotating the class with
+    // [JsonPolymorphic(TypeDiscriminatorPropertyName = "type")] and [JsonDerivedType(typeof(ButtonElement), "button")].
+    // Types that already declare polymorphism (abstract bases, or classes like MarkdownTextObject) are left alone.
+    private static readonly Action<JsonTypeInfo> SelfDiscriminatorModifier = typeInfo =>
+    {
+        var type = typeInfo.Type;
+        if (typeInfo.Kind != JsonTypeInfoKind.Object || type.IsAbstract || type.IsInterface ||
+            typeInfo.PolymorphismOptions != null)
+            return;
+
+        var ancestors = new List<Type>(type.GetInterfaces());
+        for (var baseType = type.BaseType; baseType != null; baseType = baseType.BaseType)
+            ancestors.Add(baseType);
+
+        foreach (var ancestor in ancestors)
+        {
+            var polymorphic = ancestor.GetCustomAttributes(typeof(JsonPolymorphicAttribute), false)
+                .OfType<JsonPolymorphicAttribute>().FirstOrDefault();
+            var derived = ancestor.GetCustomAttributes(typeof(JsonDerivedTypeAttribute), false)
+                .OfType<JsonDerivedTypeAttribute>().FirstOrDefault(a => a.DerivedType == type);
+            if (polymorphic == null || derived?.TypeDiscriminator is not string discriminator)
+                continue;
+
+            typeInfo.PolymorphismOptions = new JsonPolymorphismOptions
+            {
+                TypeDiscriminatorPropertyName = polymorphic.TypeDiscriminatorPropertyName ?? "$type",
+                DerivedTypes = { new JsonDerivedType(type, discriminator) }
+            };
+            return;
+        }
+    };
+
     private static readonly JsonSerializerOptions PrettyPrintOptions = CreateOptions(true);
+
+    /// <summary>
+    /// The read-only options that produce Slack-compatible JSON. Pass these to APIs that serialize for you,
+    /// such as <c>HttpClient.PostAsJsonAsync</c> or ASP.NET Core's <c>Results.Json</c>.
+    /// </summary>
+    /// <remarks>
+    /// To customize them, create a copy with <c>new JsonSerializerOptions(SlackSerializer.Options)</c>.
+    /// </remarks>
+    public static JsonSerializerOptions Options { get; } = CreateOptions(false);
 
     private static JsonSerializerOptions CreateOptions(bool indented)
     {
-        return new JsonSerializerOptions
+        var options = new JsonSerializerOptions
         {
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, // Don't emit `null` properties in Slack payloads.
+            DefaultIgnoreCondition =
+                JsonIgnoreCondition.WhenWritingNull, // Don't emit `null` properties in Slack payloads.
             WriteIndented = indented,
-            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower) }, // Slack expects all JSON properties to be snake_case.
+            Converters =
+            {
+                new JsonStringEnumConverter(JsonNamingPolicy.SnakeCaseLower)
+            }, // Slack expects all JSON properties to be snake_case.
             TypeInfoResolver = new DefaultJsonTypeInfoResolver
             {
-                Modifiers = { IgnoreTypePropertyModifier }
+                Modifiers = { IgnoreTypePropertyModifier, SelfDiscriminatorModifier }
             }
         };
+        options.MakeReadOnly();
+        return options;
     }
 
     public static string Serialize(object payload, bool indented = false)
     {
-        return JsonSerializer.Serialize(payload, indented ? PrettyPrintOptions : DefaultOptions);
+        return JsonSerializer.Serialize(payload, indented ? PrettyPrintOptions : Options);
     }
 
     public static T? Deserialize<T>(string json)
     {
-        return JsonSerializer.Deserialize<T>(json, DefaultOptions);
+        return JsonSerializer.Deserialize<T>(json, Options);
     }
 }
