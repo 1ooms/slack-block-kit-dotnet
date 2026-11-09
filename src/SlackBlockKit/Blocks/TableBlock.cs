@@ -8,13 +8,6 @@ namespace SlackBlockKit.Blocks;
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Documentation</seealso>
 public class TableBlock : Block
 {
-    public enum ColumnAlignment
-    {
-        Left,
-        Center,
-        Right
-    }
-
     private const int MaxRows = 100;
     private const int MaxColumns = 20;
 
@@ -72,6 +65,16 @@ public class TableBlock : Block
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public bool? IsWrapped { get; set; }
     }
+}
+
+/// <summary>
+/// Specifies the horizontal alignment of a table column.
+/// </summary>
+public enum ColumnAlignment
+{
+    Left,
+    Center,
+    Right
 }
 
 /// <summary>

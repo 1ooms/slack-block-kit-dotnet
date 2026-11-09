@@ -10,15 +10,6 @@ namespace SlackBlockKit.Elements;
 /// <seealso href="https://docs.slack.dev/reference/block-kit/block-elements/button-element">Slack Button Element Documentation</seealso>
 public class ButtonElement : ActionElement, IActionsElement, ISectionElement
 {
-    /// <summary>
-    /// Specifies the visual style of a button element.
-    /// </summary>
-    public enum ButtonStyle
-    {
-        Primary,
-        Danger
-    }
-
     private const int MaxValueLength = 2000;
     private const int MaxUrlLength = 3000;
     private const int MaxAccessibilityLabelLength = 75;
@@ -88,4 +79,13 @@ public class ButtonElement : ActionElement, IActionsElement, ISectionElement
         get;
         set => field = ThrowIfExceedsLength(value, MaxAccessibilityLabelLength);
     }
+}
+
+/// <summary>
+/// Specifies the visual style of a button element.
+/// </summary>
+public enum ButtonStyle
+{
+    Primary,
+    Danger
 }

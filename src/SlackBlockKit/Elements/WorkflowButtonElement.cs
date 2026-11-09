@@ -18,7 +18,7 @@ public class WorkflowButtonElement : ActionElement, IActionsElement, ISectionEle
         PlainTextObject text,
         WorkflowObject workflow,
         string actionId,
-        ButtonElement.ButtonStyle? style = null,
+        ButtonStyle? style = null,
         string? accessibilityLabel = null)
     {
         Text = text;
@@ -32,7 +32,7 @@ public class WorkflowButtonElement : ActionElement, IActionsElement, ISectionEle
         string text,
         string actionId,
         string triggerUrl,
-        ButtonElement.ButtonStyle? style = null)
+        ButtonStyle? style = null)
         : this(new PlainTextObject(text), new WorkflowObject(triggerUrl), actionId, style)
     {
     }
@@ -55,7 +55,7 @@ public class WorkflowButtonElement : ActionElement, IActionsElement, ISectionEle
 
     [JsonPropertyName("style")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ButtonElement.ButtonStyle? Style { get; set; }
+    public ButtonStyle? Style { get; set; }
 
     [JsonPropertyName("accessibility_label")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
