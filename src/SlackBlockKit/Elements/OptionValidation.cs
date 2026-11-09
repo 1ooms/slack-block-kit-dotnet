@@ -5,7 +5,7 @@ namespace SlackBlockKit.Elements;
 /// <summary>
 /// Provides shared validation logic and constraints for elements that offer a list of options.
 /// </summary>
-public static class OptionValidation
+internal static class OptionValidation
 {
     public const int MaxOptions = 100;
 

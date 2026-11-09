@@ -9,7 +9,7 @@ namespace SlackBlockKit;
 /// <summary>
 /// Provides shared validation helpers for Slack Block Kit components.
 /// </summary>
-public static class Validation
+internal static class Validation
 {
     /// <summary>
     /// Throws an <see cref="ArgumentNullException"/> if <paramref name="value"/> is <c>null</c>.
