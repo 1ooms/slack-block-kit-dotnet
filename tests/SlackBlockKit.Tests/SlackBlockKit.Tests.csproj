@@ -11,9 +11,22 @@
 
     <ItemGroup>
         <Using Include="Xunit"/>
+        <Using Include="System.Text.Json"/>
+        <Using Include="SlackBlockKit.Blocks"/>
+        <Using Include="SlackBlockKit.CompositionObjects"/>
+        <Using Include="SlackBlockKit.CompositionObjects.TextObjects"/>
+        <Using Include="SlackBlockKit.Elements"/>
+        <Using Include="SlackBlockKit.Elements.MultiSelectMenu"/>
+        <Using Include="SlackBlockKit.Elements.RichText"/>
+        <Using Include="SlackBlockKit.Elements.SelectMenu"/>
+        <Using Include="SlackBlockKit.Tests.TestHelpers" Static="true"/>
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.2">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="xunit" Version="2.5.3"/>
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">

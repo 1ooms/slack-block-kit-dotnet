@@ -15,4 +15,8 @@
         <PackageTags>slack;block-kit;slack-bot;csharp;dotnet</PackageTags>
     </PropertyGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="SlackBlockKit.Tests"/>
+    </ItemGroup>
+
 </Project>
