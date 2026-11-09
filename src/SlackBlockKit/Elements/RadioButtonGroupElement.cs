@@ -31,12 +31,25 @@ public class RadioButtonGroupElement : ActionElement, IActionsElement, IInputEle
     public List<OptionObject> Options
     {
         get;
-        set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);
+        set
+        {
+            ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);
+            ValidateInitialOption(value, InitialOption);
+            field = value;
+        }
     }
 
     [JsonPropertyName("initial_option")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public OptionObject? InitialOption { get; set; }
+    public OptionObject? InitialOption
+    {
+        get;
+        set
+        {
+            ValidateInitialOption(Options, value);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -45,4 +58,10 @@ public class RadioButtonGroupElement : ActionElement, IActionsElement, IInputEle
     [JsonPropertyName("focus_on_load")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? FocusOnLoad { get; set; }
+
+    private static void ValidateInitialOption(List<OptionObject> options, OptionObject? initialOption)
+    {
+        if (initialOption != null && !options.Any(option => OptionValidation.OptionMatches(option, initialOption)))
+            throw new ArgumentException("InitialOption must be present in Options.", nameof(InitialOption));
+    }
 }

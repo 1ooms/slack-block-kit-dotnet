@@ -35,7 +35,12 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
     public List<OptionObject> Options
     {
         get;
-        set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);
+        set
+        {
+            ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);
+            ValidateInitialOptions(value, InitialOptions);
+            field = value;
+        }
     }
 
     [JsonPropertyName("initial_options")]
@@ -62,13 +67,13 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<string>? VisibleToUserIds { get; set; }
 
-    private void ValidateInitialOptions(List<OptionObject> options, List<OptionObject>? initialOptions)
+    private static void ValidateInitialOptions(List<OptionObject> options, List<OptionObject>? initialOptions)
     {
         if (initialOptions == null) return;
         ThrowIfExceedsCount(initialOptions, MaxOptions);
 
         foreach (var initialOption in initialOptions)
-            if (!options.Any(option => StaticSelectValidation.OptionMatches(option, initialOption)))
+            if (!options.Any(option => OptionValidation.OptionMatches(option, initialOption)))
                 throw new ArgumentException("All items in InitialOptions must be present in Options.",
                     nameof(InitialOptions));
     }

@@ -21,8 +21,7 @@ public class MultiStaticSelect : MultiSelectMenuBase
         PlainTextObject? placeholder = null)
         : base(actionId, placeholder, confirm, maxSelectedItems)
     {
-        StaticSelectValidation.ValidateOptionsAndOptionGroups(options, optionGroups, nameof(MultiStaticSelect));
-        StaticSelectValidation.ValidateInitialOptions(options, optionGroups, initialOptions);
+        OptionValidation.ValidateOptionsAndOptionGroups(options, optionGroups, nameof(MultiStaticSelect));
 
         if (options != null) Options = options;
         if (optionGroups != null) OptionGroups = optionGroups;
@@ -37,7 +36,13 @@ public class MultiStaticSelect : MultiSelectMenuBase
     public List<OptionObject>? Options
     {
         get;
-        init => field = ThrowIfEmptyOrExceedsCount(value, StaticSelectValidation.MaxOptions);
+        init
+        {
+            ThrowIfEmptyOrExceedsCount(value, OptionValidation.MaxOptions);
+            OptionValidation.ValidateOptionsAndOptionGroups(value, OptionGroups, nameof(MultiStaticSelect));
+            OptionValidation.ValidateInitialOptions(value, OptionGroups, InitialOptions);
+            field = value;
+        }
     }
 
     [JsonPropertyName("option_groups")]
@@ -45,7 +50,13 @@ public class MultiStaticSelect : MultiSelectMenuBase
     public List<OptionGroupObject>? OptionGroups
     {
         get;
-        init => field = ThrowIfEmptyOrExceedsCount(value, StaticSelectValidation.MaxOptions);
+        init
+        {
+            ThrowIfEmptyOrExceedsCount(value, OptionValidation.MaxOptions);
+            OptionValidation.ValidateOptionsAndOptionGroups(Options, value, nameof(MultiStaticSelect));
+            OptionValidation.ValidateInitialOptions(Options, value, InitialOptions);
+            field = value;
+        }
     }
 
     [JsonPropertyName("initial_options")]
@@ -53,7 +64,12 @@ public class MultiStaticSelect : MultiSelectMenuBase
     public List<OptionObject>? InitialOptions
     {
         get;
-        init => field = ThrowIfExceedsCount(value, StaticSelectValidation.MaxOptions);
+        init
+        {
+            ThrowIfExceedsCount(value, OptionValidation.MaxOptions);
+            OptionValidation.ValidateInitialOptions(Options, OptionGroups, value);
+            field = value;
+        }
     }
 
     [JsonPropertyName("focus_on_load")]

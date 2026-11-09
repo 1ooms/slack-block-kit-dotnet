@@ -20,11 +20,10 @@ public class StaticSelect : SelectMenuBase
         PlainTextObject? placeholder = null)
         : base(actionId, placeholder, confirm, focusOnLoad)
     {
-        StaticSelectValidation.ValidateOptionsAndOptionGroups(options, optionGroups, nameof(StaticSelect));
-        StaticSelectValidation.ValidateInitialOption(options, optionGroups, initialOption);
+        OptionValidation.ValidateOptionsAndOptionGroups(options, optionGroups, nameof(StaticSelect));
 
-        Options = options;
-        OptionGroups = optionGroups;
+        if (options != null) Options = options;
+        if (optionGroups != null) OptionGroups = optionGroups;
         InitialOption = initialOption;
     }
 
@@ -35,7 +34,13 @@ public class StaticSelect : SelectMenuBase
     public List<OptionObject>? Options
     {
         get;
-        init => field = ThrowIfEmptyOrExceedsCount(value, StaticSelectValidation.MaxOptions);
+        init
+        {
+            ThrowIfEmptyOrExceedsCount(value, OptionValidation.MaxOptions);
+            OptionValidation.ValidateOptionsAndOptionGroups(value, OptionGroups, nameof(StaticSelect));
+            OptionValidation.ValidateInitialOption(value, OptionGroups, InitialOption);
+            field = value;
+        }
     }
 
     [JsonPropertyName("option_groups")]
@@ -43,10 +48,24 @@ public class StaticSelect : SelectMenuBase
     public List<OptionGroupObject>? OptionGroups
     {
         get;
-        init => field = ThrowIfEmptyOrExceedsCount(value, StaticSelectValidation.MaxOptions);
+        init
+        {
+            ThrowIfEmptyOrExceedsCount(value, OptionValidation.MaxOptions);
+            OptionValidation.ValidateOptionsAndOptionGroups(Options, value, nameof(StaticSelect));
+            OptionValidation.ValidateInitialOption(Options, value, InitialOption);
+            field = value;
+        }
     }
 
     [JsonPropertyName("initial_option")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public OptionObject? InitialOption { get; init; }
+    public OptionObject? InitialOption
+    {
+        get;
+        init
+        {
+            OptionValidation.ValidateInitialOption(Options, OptionGroups, value);
+            field = value;
+        }
+    }
 }
