@@ -75,6 +75,48 @@ public class ContainerBlockTests
     }
 
     [Fact]
+    public void Constructor_AcceptsBothTitles()
+    {
+        var block = new ContainerBlock(Children(), new PlainTextObject("T"), RichTextBlockOf());
+
+        Assert.NotNull(block.Title);
+        Assert.NotNull(block.RichTextTitle);
+    }
+
+    [Fact]
+    public void Initializer_ThrowsWhenNoTitleRemains()
+    {
+        Assert.Throws<ArgumentException>(() => new ContainerBlock(Children(), new PlainTextObject("T")) { Title = null });
+        Assert.Throws<ArgumentException>(() =>
+            new ContainerBlock(Children(), richTextTitle: RichTextBlockOf()) { RichTextTitle = null });
+    }
+
+    [Fact]
+    public void Setters_AllowClearingOneTitleWhenTheOtherRemains()
+    {
+        var block = new ContainerBlock(Children(), new PlainTextObject("T"));
+
+        Assert.Throws<ArgumentException>(() => block.Title = null);
+
+        block.RichTextTitle = RichTextBlockOf();
+        block.Title = null;
+
+        Assert.Null(block.Title);
+        Assert.NotNull(block.RichTextTitle);
+        Assert.Throws<ArgumentException>(() => block.RichTextTitle = null);
+    }
+
+    [Fact]
+    public void Deserialize_RoundTripsEitherTitle()
+    {
+        var withTitle = SlackSerializer.Serialize(new ContainerBlock(Children(), new PlainTextObject("T")));
+        var withRichTitle = SlackSerializer.Serialize(new ContainerBlock(Children(), richTextTitle: RichTextBlockOf()));
+
+        Assert.Equal("T", SlackSerializer.Deserialize<ContainerBlock>(withTitle)!.Title!.Text);
+        Assert.NotNull(SlackSerializer.Deserialize<ContainerBlock>(withRichTitle)!.RichTextTitle);
+    }
+
+    [Fact]
     public void ChildBlocks_ThrowsWhenNullOrEmpty()
     {
         var title = new PlainTextObject("T");

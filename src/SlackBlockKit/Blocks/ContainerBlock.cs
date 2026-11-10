@@ -26,11 +26,10 @@ public class ContainerBlock : Block, IMessageBlock, IHomeBlock
         bool? defaultCollapsed = null,
         bool? hasHeaderDivider = null)
     {
-        if (title == null && richTextTitle == null)
-            throw new ArgumentException("Either title or rich_text_title is required for a ContainerBlock.");
+        ValidateTitle(title, richTextTitle);
 
-        Title = title;
-        RichTextTitle = richTextTitle;
+        if (title != null) Title = title;
+        if (richTextTitle != null) RichTextTitle = richTextTitle;
         Subtitle = subtitle;
         ChildBlocks = childBlocks;
         BlockId = blockId;
@@ -43,17 +42,38 @@ public class ContainerBlock : Block, IMessageBlock, IHomeBlock
 
     public override string Type => "container";
 
+    /// <remarks>
+    /// At least one of <see cref="Title"/> or <see cref="RichTextTitle"/> must be set.
+    /// Both may be set, in which case Slack displays <see cref="RichTextTitle"/> and ignores <see cref="Title"/>.
+    /// </remarks>
     [JsonPropertyName("title")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public PlainTextObject? Title
     {
         get;
-        init => field = ThrowIfExceedsLength(value, MaxTitleLength);
+        set
+        {
+            ThrowIfExceedsLength(value, MaxTitleLength);
+            ValidateTitle(value, RichTextTitle);
+            field = value;
+        }
     }
 
+    /// <remarks>
+    /// At least one of <see cref="Title"/> or <see cref="RichTextTitle"/> must be set.
+    /// If both are set, <see cref="RichTextTitle"/> takes precedence over <see cref="Title"/>.
+    /// </remarks>
     [JsonPropertyName("rich_text_title")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public RichTextBlock? RichTextTitle { get; init; }
+    public RichTextBlock? RichTextTitle
+    {
+        get;
+        set
+        {
+            ValidateTitle(Title, value);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("subtitle")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -89,6 +109,12 @@ public class ContainerBlock : Block, IMessageBlock, IHomeBlock
     [JsonPropertyName("has_header_divider")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? HasHeaderDivider { get; set; }
+
+    private static void ValidateTitle(PlainTextObject? title, RichTextBlock? richTextTitle)
+    {
+        if (title == null && richTextTitle == null)
+            throw new ArgumentException("Either title or rich_text_title is required for a ContainerBlock.");
+    }
 }
 
 /// <summary>
