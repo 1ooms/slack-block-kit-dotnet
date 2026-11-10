@@ -28,21 +28,17 @@ public class CardBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
         List<ButtonElement>? actions = null,
         string? blockId = null)
     {
-        if (heroImage == null && title == null && (actions == null || actions.Count == 0) && body == null)
-            throw new ArgumentException(
-                "At least one of hero_image, title, actions, or body is required for a CardBlock.");
-
-        if (icon != null && slackIcon != null)
-            throw new ArgumentException("Don't specify both icon and slackIcon for CardBlock.");
-
-        Title = title;
+        ValidateRequiredContent(heroImage, title, actions, body);
+        ValidateIcons(icon, slackIcon);
+        
+        if (title != null) Title = title;
+        if (body != null) Body = body;
+        if (heroImage != null) HeroImage = heroImage;
+        if (actions != null) Actions = actions;
+        if (icon != null) Icon = icon;
+        if (slackIcon != null) SlackIcon = slackIcon;
         Subtitle = subtitle;
-        Body = body;
         Subtext = subtext;
-        HeroImage = heroImage;
-        Icon = icon;
-        SlackIcon = slackIcon;
-        Actions = actions;
         BlockId = blockId;
     }
 
@@ -53,7 +49,12 @@ public class CardBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
     public TextObject? Title
     {
         get;
-        init => field = ThrowIfExceedsLength(value, MaxTitleLength);
+        set
+        {
+            ThrowIfExceedsLength(value, MaxTitleLength);
+            ValidateRequiredContent(HeroImage, value, Actions, Body);
+            field = value;
+        }
     }
 
     [JsonPropertyName("subtitle")]
@@ -69,7 +70,12 @@ public class CardBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
     public TextObject? Body
     {
         get;
-        init => field = ThrowIfExceedsLength(value, MaxBodyLength);
+        set
+        {
+            ThrowIfExceedsLength(value, MaxBodyLength);
+            ValidateRequiredContent(HeroImage, Title, Actions, value);
+            field = value;
+        }
     }
 
     [JsonPropertyName("subtext")]
@@ -82,21 +88,67 @@ public class CardBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 
     [JsonPropertyName("hero_image")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ImageElement? HeroImage { get; init; }
+    public ImageElement? HeroImage
+    {
+        get;
+        set
+        {
+            ValidateRequiredContent(value, Title, Actions, Body);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("icon")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ImageElement? Icon { get; init; }
+    public ImageElement? Icon
+    {
+        get;
+        set
+        {
+            ValidateIcons(value, SlackIcon);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("slack_icon")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SlackIconObject? SlackIcon { get; init; }
+    public SlackIconObject? SlackIcon
+    {
+        get;
+        set
+        {
+            ValidateIcons(Icon, value);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("actions")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<ButtonElement>? Actions
     {
         get;
-        init => field = ThrowIfEmptyOrExceedsCount(value, MaxActions);
+        set
+        {
+            ThrowIfEmptyOrExceedsCount(value, MaxActions);
+            ValidateRequiredContent(HeroImage, Title, value, Body);
+            field = value;
+        }
+    }
+
+    private static void ValidateRequiredContent(
+        ImageElement? heroImage,
+        TextObject? title,
+        List<ButtonElement>? actions,
+        TextObject? body)
+    {
+        if (heroImage == null && title == null && (actions == null || actions.Count == 0) && body == null)
+            throw new ArgumentException(
+                "At least one of hero_image, title, actions, or body is required for a CardBlock.");
+    }
+
+    private static void ValidateIcons(ImageElement? icon, SlackIconObject? slackIcon)
+    {
+        if (icon != null && slackIcon != null)
+            throw new ArgumentException("Don't specify both icon and slackIcon for CardBlock.");
     }
 }
