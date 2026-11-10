@@ -20,7 +20,29 @@ public abstract class RichTextElement
 /// Marks an element as valid for inclusion within a rich text section, list, or quote block element.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/rich-text-block">Slack Rich Text Block Documentation</seealso>
-[JsonConverter(typeof(InterfaceElementConverter<IRichTextSubElement>))]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(AttachmentMentionElement), "attachment_mention")]
+[JsonDerivedType(typeof(BroadcastElement), "broadcast")]
+[JsonDerivedType(typeof(CanvasElement), "canvas")]
+[JsonDerivedType(typeof(CanvasMessageUnfurlElement), "canvas_message_unfurl")]
+[JsonDerivedType(typeof(CanvasUserMentionElement), "canvas_user_mention")]
+[JsonDerivedType(typeof(ChannelElement), "channel")]
+[JsonDerivedType(typeof(CitationElement), "citation")]
+[JsonDerivedType(typeof(ColorElement), "color")]
+[JsonDerivedType(typeof(DateElement), "date")]
+[JsonDerivedType(typeof(EmojiElement), "emoji")]
+[JsonDerivedType(typeof(FileElement), "file")]
+[JsonDerivedType(typeof(LinkElement), "link")]
+[JsonDerivedType(typeof(ListRecordElement), "list_record")]
+[JsonDerivedType(typeof(MessageMentionElement), "message_mention")]
+[JsonDerivedType(typeof(SalesforceDataFieldElement), "salesforce_data_field")]
+[JsonDerivedType(typeof(TagElement), "tag")]
+[JsonDerivedType(typeof(TeamElement), "team")]
+[JsonDerivedType(typeof(TextElement), "text")]
+[JsonDerivedType(typeof(UserElement), "user")]
+[JsonDerivedType(typeof(UsergroupElement), "usergroup")]
+[JsonDerivedType(typeof(WorkObjectMentionElement), "work_object_mention")]
+[JsonDerivedType(typeof(WorkflowMentionElement), "workflow_mention")]
 public interface IRichTextSubElement
 {
     [JsonIgnore] string Type { get; }

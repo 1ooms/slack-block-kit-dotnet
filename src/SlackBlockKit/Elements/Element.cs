@@ -91,54 +91,93 @@ public abstract class ActionElement : Element
     }
 }
 
+// The marker interfaces below list their allowed element types with JsonDerivedType, so deserializing an
+// element type that isn't allowed in that position throws a JsonException instead of producing null.
+// Only concrete types can be listed. ElementInterfaceDerivedTypesTests guards that each list is complete.
+
 /// <summary>
 /// Marks an element as valid for inclusion in an Actions block.
 /// </summary>
-[JsonConverter(typeof(InterfaceElementConverter<IActionsElement>))]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(ButtonElement), "button")]
+[JsonDerivedType(typeof(CheckboxesElement), "checkboxes")]
+[JsonDerivedType(typeof(DatePickerElement), "datepicker")]
+[JsonDerivedType(typeof(DateTimePickerElement), "datetimepicker")]
+[JsonDerivedType(typeof(OverflowMenuElement), "overflow")]
+[JsonDerivedType(typeof(RadioButtonGroupElement), "radio_buttons")]
+[JsonDerivedType(typeof(RichTextInputElement), "rich_text_input")]
+[JsonDerivedType(typeof(TimePickerElement), "timepicker")]
+[JsonDerivedType(typeof(WorkflowButtonElement), "workflow_button")]
+[JsonDerivedType(typeof(StaticSelect), "static_select")]
+[JsonDerivedType(typeof(ExternalSelect), "external_select")]
+[JsonDerivedType(typeof(UsersSelect), "users_select")]
+[JsonDerivedType(typeof(ConversationsSelect), "conversations_select")]
+[JsonDerivedType(typeof(ChannelsSelect), "channels_select")]
+[JsonDerivedType(typeof(MultiStaticSelect), "multi_static_select")]
+[JsonDerivedType(typeof(MultiExternalSelect), "multi_external_select")]
+[JsonDerivedType(typeof(MultiUsersSelect), "multi_users_select")]
+[JsonDerivedType(typeof(MultiConversationsSelect), "multi_conversations_select")]
+[JsonDerivedType(typeof(MultiChannelsSelect), "multi_channels_select")]
 public interface IActionsElement;
 
 /// <summary>
 /// Marks an element as valid for inclusion in a ContextActions block.
 /// </summary>
-[JsonConverter(typeof(InterfaceElementConverter<IContextActionsElement>))]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(FeedbackButtonsElement), "feedback_buttons")]
+[JsonDerivedType(typeof(IconButtonElement), "icon_button")]
 public interface IContextActionsElement;
 
 /// <summary>
 /// Marks an element as valid for inclusion in an Input block.
 /// </summary>
-[JsonConverter(typeof(InterfaceElementConverter<IInputElement>))]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(CheckboxesElement), "checkboxes")]
+[JsonDerivedType(typeof(DatePickerElement), "datepicker")]
+[JsonDerivedType(typeof(DateTimePickerElement), "datetimepicker")]
+[JsonDerivedType(typeof(EmailInputElement), "email_text_input")]
+[JsonDerivedType(typeof(FileInputElement), "file_input")]
+[JsonDerivedType(typeof(NumberInputElement), "number_input")]
+[JsonDerivedType(typeof(PlainTextInputElement), "plain_text_input")]
+[JsonDerivedType(typeof(RadioButtonGroupElement), "radio_buttons")]
+[JsonDerivedType(typeof(RichTextInputElement), "rich_text_input")]
+[JsonDerivedType(typeof(TimePickerElement), "timepicker")]
+[JsonDerivedType(typeof(UrlInputElement), "url_text_input")]
+[JsonDerivedType(typeof(StaticSelect), "static_select")]
+[JsonDerivedType(typeof(ExternalSelect), "external_select")]
+[JsonDerivedType(typeof(UsersSelect), "users_select")]
+[JsonDerivedType(typeof(ConversationsSelect), "conversations_select")]
+[JsonDerivedType(typeof(ChannelsSelect), "channels_select")]
+[JsonDerivedType(typeof(MultiStaticSelect), "multi_static_select")]
+[JsonDerivedType(typeof(MultiExternalSelect), "multi_external_select")]
+[JsonDerivedType(typeof(MultiUsersSelect), "multi_users_select")]
+[JsonDerivedType(typeof(MultiConversationsSelect), "multi_conversations_select")]
+[JsonDerivedType(typeof(MultiChannelsSelect), "multi_channels_select")]
 public interface IInputElement;
 
 /// <summary>
 /// Marks an element as valid for inclusion as an accessory in a Section block.
 /// </summary>
-[JsonConverter(typeof(InterfaceElementConverter<ISectionElement>))]
+[JsonPolymorphic(TypeDiscriminatorPropertyName = "type")]
+[JsonDerivedType(typeof(ButtonElement), "button")]
+[JsonDerivedType(typeof(CheckboxesElement), "checkboxes")]
+[JsonDerivedType(typeof(DatePickerElement), "datepicker")]
+[JsonDerivedType(typeof(ImageElement), "image")]
+[JsonDerivedType(typeof(OverflowMenuElement), "overflow")]
+[JsonDerivedType(typeof(RadioButtonGroupElement), "radio_buttons")]
+[JsonDerivedType(typeof(TimePickerElement), "timepicker")]
+[JsonDerivedType(typeof(WorkflowButtonElement), "workflow_button")]
+[JsonDerivedType(typeof(StaticSelect), "static_select")]
+[JsonDerivedType(typeof(ExternalSelect), "external_select")]
+[JsonDerivedType(typeof(UsersSelect), "users_select")]
+[JsonDerivedType(typeof(ConversationsSelect), "conversations_select")]
+[JsonDerivedType(typeof(ChannelsSelect), "channels_select")]
+[JsonDerivedType(typeof(MultiStaticSelect), "multi_static_select")]
+[JsonDerivedType(typeof(MultiExternalSelect), "multi_external_select")]
+[JsonDerivedType(typeof(MultiUsersSelect), "multi_users_select")]
+[JsonDerivedType(typeof(MultiConversationsSelect), "multi_conversations_select")]
+[JsonDerivedType(typeof(MultiChannelsSelect), "multi_channels_select")]
 public interface ISectionElement;
-
-/// <summary>
-/// Converter for interfaces whose implementors all derive from <see cref="Element"/>.
-/// </summary>
-/// <remarks>
-/// <para>
-/// Slack Block Kit specifies that blocks can only contain certain element types (e.g., an Actions block
-/// can only contain interactive elements). Rather than duplicating dozens of <see cref="JsonDerivedTypeAttribute"/>
-/// declarations across every marker interface (<see cref="IActionsElement"/>, <see cref="IInputElement"/>, etc.),
-/// this converter delegates serialization and deserialization to the root <see cref="Element"/> polymorphic
-/// type hierarchy, then casts the result to <typeparamref name="T"/>.
-/// </para>
-/// </remarks>
-public class InterfaceElementConverter<T> : JsonConverter<T> where T : class
-{
-    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        return JsonSerializer.Deserialize<Element>(ref reader, options) as T;
-    }
-
-    public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
-    {
-        JsonSerializer.Serialize(writer, (Element)(object)value, options);
-    }
-}
 
 /// <summary>
 /// Marks an element or text object as valid for inclusion in a Context block.
