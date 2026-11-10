@@ -60,6 +60,10 @@ public class PlainTextInputElement : ActionElement, IInputElement
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? Multiline { get; set; }
 
+    /// <remarks>
+    /// Deliberately not validated against <see cref="MaxLength"/>:
+    /// the Slack API accepts a minimum length greater than the maximum length.
+    /// </remarks>
     [JsonPropertyName("min_length")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? MinLength
@@ -74,6 +78,14 @@ public class PlainTextInputElement : ActionElement, IInputElement
         }
     }
 
+    /// <remarks>
+    /// Deliberately not validated against <see cref="MinLength"/>:
+    /// the Slack API accepts a maximum length smaller than the minimum length.
+    /// </remarks>
+    /// <remarks>
+    /// Deliberately not validated against <see cref="InitialValue"/>:
+    /// the Slack API accepts an initial value longer than the maximum length.
+    /// </remarks>
     [JsonPropertyName("max_length")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? MaxLength

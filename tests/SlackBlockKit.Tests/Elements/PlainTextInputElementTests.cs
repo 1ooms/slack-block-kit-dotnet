@@ -109,4 +109,21 @@ public class PlainTextInputElementTests
         Assert.True(element.FocusOnLoad);
         Assert.Equal("Placeholder", element.Placeholder!.Text);
     }
+
+    // The Slack API accepts these combinations, so the library must not reject them.
+    [Fact]
+    public void Lengths_AreNotCrossValidated()
+    {
+        var minAboveMax = new PlainTextInputElement(minLength: 100, maxLength: 5);
+        Assert.Equal(100, minAboveMax.MinLength);
+        Assert.Equal(5, minAboveMax.MaxLength);
+
+        var initialTooLong = new PlainTextInputElement(initialValue: "too long", maxLength: 3);
+        Assert.Equal("too long", initialTooLong.InitialValue);
+
+        var viaSetters = new PlainTextInputElement(maxLength: 3);
+        viaSetters.MinLength = 10;
+        viaSetters.InitialValue = "too long";
+        Assert.Equal(10, viaSetters.MinLength);
+    }
 }
