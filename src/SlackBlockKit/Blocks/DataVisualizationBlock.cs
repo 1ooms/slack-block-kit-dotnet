@@ -263,7 +263,18 @@ public class ChartAxisConfig
     public List<string> Categories
     {
         get;
-        set => field = ThrowIfNullOrEmpty(value);
+        set
+        {
+            ThrowIfNullOrEmpty(value);
+
+            var seen = new HashSet<string>();
+            foreach (var category in value)
+                if (!seen.Add(category))
+                    throw new ArgumentException($"Categories cannot contain duplicate value '{category}'.",
+                        nameof(Categories));
+
+            field = value;
+        }
     }
 
     [JsonPropertyName("x_title")]

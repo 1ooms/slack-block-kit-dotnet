@@ -34,6 +34,22 @@ public class ChartAxisConfigTests
     }
 
     [Fact]
+    public void Categories_ThrowsOnDuplicates()
+    {
+        Assert.Throws<ArgumentException>(() => new ChartAxisConfig(["Q1", "Q2", "Q1"]));
+
+        var axis = new ChartAxisConfig(["Q1"]);
+        Assert.Throws<ArgumentException>(() => axis.Categories = ["Q2", "Q2"]);
+        Assert.Equal(["Q1"], axis.Categories);
+    }
+
+    [Fact]
+    public void Categories_IsCaseSensitive()
+    {
+        Assert.Equal(["q1", "Q1"], new ChartAxisConfig(["q1", "Q1"]).Categories);
+    }
+
+    [Fact]
     public void Titles_AllowUpTo50Characters()
     {
         Assert.NotNull(new ChartAxisConfig(["Q1"], Chars(50), Chars(50)));
