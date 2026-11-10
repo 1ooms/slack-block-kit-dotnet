@@ -79,12 +79,14 @@ public class PlainTextInputElement : ActionElement, IInputElement
     }
 
     /// <remarks>
+    /// <para>
     /// Deliberately not validated against <see cref="MinLength"/>:
     /// the Slack API accepts a maximum length smaller than the minimum length.
-    /// </remarks>
-    /// <remarks>
+    /// </para>
+    /// <para>
     /// Deliberately not validated against <see cref="InitialValue"/>:
     /// the Slack API accepts an initial value longer than the maximum length.
+    /// </para>
     /// </remarks>
     [JsonPropertyName("max_length")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
