@@ -157,4 +157,29 @@ public class MultiStaticSelectTests
         Assert.Single(SlackSerializer.Deserialize<MultiStaticSelect>(withOptions)!.InitialOptions!);
         Assert.Single(SlackSerializer.Deserialize<MultiStaticSelect>(withGroups)!.InitialOptions!);
     }
+
+    [Fact]
+    public void InitialOptions_CannotExceedMaxSelectedItems()
+    {
+        var options = new List<OptionObject> { Option("a"), Option("b") };
+
+        Assert.NotNull(new MultiStaticSelect(options: options, initialOptions: [Option("a"), Option("b")],
+            maxSelectedItems: 2));
+        Assert.Throws<ArgumentException>(() =>
+            new MultiStaticSelect(options: options, initialOptions: [Option("a"), Option("b")], maxSelectedItems: 1));
+        Assert.Throws<ArgumentException>(() =>
+            new MultiStaticSelect(options: options, maxSelectedItems: 1) { InitialOptions = [Option("a"), Option("b")] });
+    }
+
+    [Fact]
+    public void MaxSelectedItems_CannotBeLoweredBelowInitialOptions()
+    {
+        var select = new MultiStaticSelect(options: [Option("a"), Option("b")], initialOptions: [Option("a"), Option("b")]);
+
+        Assert.Throws<ArgumentException>(() => select.MaxSelectedItems = 1);
+        Assert.Null(select.MaxSelectedItems);
+
+        select.MaxSelectedItems = 2;
+        Assert.Equal(2, select.MaxSelectedItems);
+    }
 }

@@ -37,4 +37,25 @@ public class MultiConversationsSelectTests
     {
         AssertProperties(ToJson(new MultiConversationsSelect()), "type");
     }
+
+    [Fact]
+    public void InitialConversations_CannotExceedMaxSelectedItems()
+    {
+        Assert.NotNull(new MultiConversationsSelect(initialConversations: ["C1", "C2"], maxSelectedItems: 2));
+        Assert.Throws<ArgumentException>(() => new MultiConversationsSelect(initialConversations: ["C1", "C2"], maxSelectedItems: 1));
+
+        var select = new MultiConversationsSelect(maxSelectedItems: 1);
+        Assert.Throws<ArgumentException>(() => select.InitialConversations = ["C1", "C2"]);
+        Assert.Null(select.InitialConversations);
+    }
+
+    [Fact]
+    public void MaxSelectedItems_CannotBeLoweredBelowInitialConversations()
+    {
+        var select = new MultiConversationsSelect(initialConversations: ["C1", "C2"]);
+
+        Assert.Throws<ArgumentException>(() => select.MaxSelectedItems = 1);
+        select.MaxSelectedItems = 2;
+        Assert.Equal(2, select.MaxSelectedItems);
+    }
 }

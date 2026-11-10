@@ -33,4 +33,25 @@ public class MultiChannelsSelectTests
     {
         AssertProperties(ToJson(new MultiChannelsSelect()), "type");
     }
+
+    [Fact]
+    public void InitialChannels_CannotExceedMaxSelectedItems()
+    {
+        Assert.NotNull(new MultiChannelsSelect(initialChannels: ["C1", "C2"], maxSelectedItems: 2));
+        Assert.Throws<ArgumentException>(() => new MultiChannelsSelect(initialChannels: ["C1", "C2"], maxSelectedItems: 1));
+
+        var select = new MultiChannelsSelect(maxSelectedItems: 1);
+        Assert.Throws<ArgumentException>(() => select.InitialChannels = ["C1", "C2"]);
+        Assert.Null(select.InitialChannels);
+    }
+
+    [Fact]
+    public void MaxSelectedItems_CannotBeLoweredBelowInitialChannels()
+    {
+        var select = new MultiChannelsSelect(initialChannels: ["C1", "C2"]);
+
+        Assert.Throws<ArgumentException>(() => select.MaxSelectedItems = 1);
+        select.MaxSelectedItems = 2;
+        Assert.Equal(2, select.MaxSelectedItems);
+    }
 }

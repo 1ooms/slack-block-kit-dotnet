@@ -34,4 +34,26 @@ public class MultiExternalSelectTests
     {
         AssertProperties(ToJson(new MultiExternalSelect()), "type");
     }
+
+    [Fact]
+    public void InitialOptions_CannotExceedMaxSelectedItems()
+    {
+        Assert.NotNull(new MultiExternalSelect(initialOptions: [Option("a"), Option("b")], maxSelectedItems: 2));
+        Assert.Throws<ArgumentException>(() =>
+            new MultiExternalSelect(initialOptions: [Option("a"), Option("b")], maxSelectedItems: 1));
+
+        var select = new MultiExternalSelect(maxSelectedItems: 1);
+        Assert.Throws<ArgumentException>(() => select.InitialOptions = [Option("a"), Option("b")]);
+        Assert.Null(select.InitialOptions);
+    }
+
+    [Fact]
+    public void MaxSelectedItems_CannotBeLoweredBelowInitialOptions()
+    {
+        var select = new MultiExternalSelect(initialOptions: [Option("a"), Option("b")]);
+
+        Assert.Throws<ArgumentException>(() => select.MaxSelectedItems = 1);
+        select.MaxSelectedItems = 3;
+        Assert.Equal(3, select.MaxSelectedItems);
+    }
 }

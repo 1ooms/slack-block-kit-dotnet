@@ -31,7 +31,17 @@ public class MultiConversationsSelect : MultiSelectMenuBase
 
     [JsonPropertyName("initial_conversations")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string>? InitialConversations { get; set; }
+    public List<string>? InitialConversations
+    {
+        get;
+        set
+        {
+            ValidateInitialSelectionCount(value?.Count, MaxSelectedItems);
+            field = value;
+        }
+    }
+
+    protected override int? InitialSelectionCount => InitialConversations?.Count;
 
     [JsonPropertyName("default_to_current_conversation")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

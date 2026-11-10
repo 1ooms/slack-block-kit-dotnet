@@ -27,7 +27,17 @@ public class MultiChannelsSelect : MultiSelectMenuBase
 
     [JsonPropertyName("initial_channels")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string>? InitialChannels { get; set; }
+    public List<string>? InitialChannels
+    {
+        get;
+        set
+        {
+            ValidateInitialSelectionCount(value?.Count, MaxSelectedItems);
+            field = value;
+        }
+    }
+
+    protected override int? InitialSelectionCount => InitialChannels?.Count;
 
     [JsonPropertyName("focus_on_load")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

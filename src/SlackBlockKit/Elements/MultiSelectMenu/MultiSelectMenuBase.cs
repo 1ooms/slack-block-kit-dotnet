@@ -45,6 +45,7 @@ public abstract class MultiSelectMenuBase : ActionElement, IActionsElement, IInp
                 throw new ArgumentException("MaxSelectedItems must be larger than 0", nameof(MaxSelectedItems));
             }
 
+            ValidateInitialSelectionCount(InitialSelectionCount, value);
             field = value;
         }
     }
@@ -52,4 +53,13 @@ public abstract class MultiSelectMenuBase : ActionElement, IActionsElement, IInp
     [JsonPropertyName("confirm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ConfirmationDialogObject? Confirm { get; set; }
+
+    protected virtual int? InitialSelectionCount => null;
+    
+    protected static void ValidateInitialSelectionCount(int? initialSelectionCount, int? maxSelectedItems)
+    {
+        if (initialSelectionCount > maxSelectedItems)
+            throw new ArgumentException(
+                $"The number of initially selected items ({initialSelectionCount}) cannot be greater than MaxSelectedItems ({maxSelectedItems}).");
+    }
 }

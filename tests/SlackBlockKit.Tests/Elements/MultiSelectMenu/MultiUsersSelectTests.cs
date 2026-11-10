@@ -34,4 +34,25 @@ public class MultiUsersSelectTests
     {
         AssertProperties(ToJson(new MultiUsersSelect()), "type");
     }
+
+    [Fact]
+    public void InitialUsers_CannotExceedMaxSelectedItems()
+    {
+        Assert.NotNull(new MultiUsersSelect(initialUsers: ["U1", "U2"], maxSelectedItems: 2));
+        Assert.Throws<ArgumentException>(() => new MultiUsersSelect(initialUsers: ["U1", "U2"], maxSelectedItems: 1));
+
+        var select = new MultiUsersSelect(maxSelectedItems: 1);
+        Assert.Throws<ArgumentException>(() => select.InitialUsers = ["U1", "U2"]);
+        Assert.Null(select.InitialUsers);
+    }
+
+    [Fact]
+    public void MaxSelectedItems_CannotBeLoweredBelowInitialUsers()
+    {
+        var select = new MultiUsersSelect(initialUsers: ["U1", "U2"]);
+
+        Assert.Throws<ArgumentException>(() => select.MaxSelectedItems = 1);
+        select.MaxSelectedItems = 2;
+        Assert.Equal(2, select.MaxSelectedItems);
+    }
 }

@@ -27,7 +27,17 @@ public class MultiUsersSelect : MultiSelectMenuBase
 
     [JsonPropertyName("initial_users")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string>? InitialUsers { get; set; }
+    public List<string>? InitialUsers
+    {
+        get;
+        set
+        {
+            ValidateInitialSelectionCount(value?.Count, MaxSelectedItems);
+            field = value;
+        }
+    }
+
+    protected override int? InitialSelectionCount => InitialUsers?.Count;
 
     [JsonPropertyName("focus_on_load")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

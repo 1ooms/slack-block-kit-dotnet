@@ -27,7 +27,17 @@ public class MultiExternalSelect : MultiSelectMenuBase
 
     [JsonPropertyName("initial_options")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<OptionObject>? InitialOptions { get; set; }
+    public List<OptionObject>? InitialOptions
+    {
+        get;
+        set
+        {
+            ValidateInitialSelectionCount(value?.Count, MaxSelectedItems);
+            field = value;
+        }
+    }
+
+    protected override int? InitialSelectionCount => InitialOptions?.Count;
 
     [JsonPropertyName("min_query_length")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

@@ -68,9 +68,12 @@ public class MultiStaticSelect : MultiSelectMenuBase
         {
             ThrowIfExceedsCount(value, OptionValidation.MaxOptions);
             OptionValidation.ValidateInitialOptions(Options, OptionGroups, value);
+            ValidateInitialSelectionCount(value?.Count, MaxSelectedItems);
             field = value;
         }
     }
+
+    protected override int? InitialSelectionCount => InitialOptions?.Count;
 
     [JsonPropertyName("focus_on_load")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
