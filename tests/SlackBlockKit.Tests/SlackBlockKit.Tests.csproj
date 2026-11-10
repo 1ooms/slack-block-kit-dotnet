@@ -19,6 +19,7 @@
         <Using Include="SlackBlockKit.Elements.MultiSelectMenu"/>
         <Using Include="SlackBlockKit.Elements.RichText"/>
         <Using Include="SlackBlockKit.Elements.SelectMenu"/>
+        <Using Include="SlackBlockKit.Surfaces"/>
         <Using Include="SlackBlockKit.Tests.TestHelpers" Static="true"/>
     </ItemGroup>
 
