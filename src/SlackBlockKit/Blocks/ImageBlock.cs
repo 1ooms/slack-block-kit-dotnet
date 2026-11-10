@@ -8,7 +8,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents an image block (<c>type: "image"</c>) that displays a simple image, with an optional title and alt text.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/image-block">Slack Image Block Documentation</seealso>
-public class ImageBlock : Block
+public class ImageBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 {
     private const int MaxAltTextLength = 2000;
     private const int MaxImageUrlLength = 3000;

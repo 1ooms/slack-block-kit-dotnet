@@ -6,7 +6,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a file block (<c>type: "file"</c>) that displays a remote file shared into Slack.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/file-block">Slack File Block Documentation</seealso>
-public class FileBlock : Block
+public class FileBlock : Block, IMessageBlock
 {
     public FileBlock(string externalId, string source = "remote", string? blockId = null)
     {

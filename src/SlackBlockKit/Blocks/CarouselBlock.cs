@@ -6,7 +6,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a carousel block (<c>type: "carousel"</c>) that enables a horizontally scrollable sequence of card blocks.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/carousel-block">Slack Carousel Block Documentation</seealso>
-public class CarouselBlock : Block
+public class CarouselBlock : Block, IMessageBlock, IHomeBlock
 {
     private const int MaxCards = 10;
 

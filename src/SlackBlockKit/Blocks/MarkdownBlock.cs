@@ -6,7 +6,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a markdown block (<c>type: "markdown"</c>) that renders formatted markdown text.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/markdown-block">Slack Markdown Block Documentation</seealso>
-public class MarkdownBlock : Block
+public class MarkdownBlock : Block, IMessageBlock
 {
     public MarkdownBlock(string text, string? blockId = null)
     {

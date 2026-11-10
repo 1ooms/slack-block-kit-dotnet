@@ -8,7 +8,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a section block (<c>type: "section"</c>) that displays text, two-column fields, and an optional accessory element.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/section-block">Slack Section Block Documentation</seealso>
-public class SectionBlock : Block
+public class SectionBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 {
     private const int MaxTextLength = 3000;
     private const int MaxFields = 10;

@@ -7,7 +7,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a context actions block (<c>type: "context_actions"</c>) that displays interactive action elements in a contextual layout.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/context-actions-block">Slack Context Actions Block Documentation</seealso>
-public class ContextActionsBlock : Block
+public class ContextActionsBlock : Block, IMessageBlock
 {
     private const int MaxElements = 5;
 

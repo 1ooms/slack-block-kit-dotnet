@@ -6,7 +6,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a Slack Table block (<c>type: "table"</c>).
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/table-block">Slack Table Block Documentation</seealso>
-public class TableBlock : Block
+public class TableBlock : Block, IMessageBlock, IHomeBlock
 {
     private const int MaxRows = 100;
     private const int MaxColumns = 20;

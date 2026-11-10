@@ -8,7 +8,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a container block (<c>type: "container"</c>) that groups other blocks with optional collapsible controls and header styling.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/container-block">Slack Container Block Documentation</seealso>
-public class ContainerBlock : Block
+public class ContainerBlock : Block, IMessageBlock, IHomeBlock
 {
     private const int MaxTitleLength = 150;
     private const int MaxSubtitleLength = 150;

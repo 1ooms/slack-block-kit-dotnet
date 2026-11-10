@@ -6,7 +6,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a data visualization block (<c>type: "data_visualization"</c>) that displays charts such as pie, bar, area, or line charts.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/data-visualization-block">Slack Data Visualization Block Documentation</seealso>
-public class DataVisualizationBlock : Block
+public class DataVisualizationBlock : Block, IMessageBlock, IHomeBlock
 {
     private const int MaxTitleLength = 50;
 

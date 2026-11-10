@@ -8,7 +8,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a task card block (<c>type: "task_card"</c>) that displays a card for an individual task with status, details, and output.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/task-card-block">Slack Task Card Block Documentation</seealso>
-public class TaskCardBlock : Block
+public class TaskCardBlock : Block, IMessageBlock
 {
     public TaskCardBlock(
         string taskId,

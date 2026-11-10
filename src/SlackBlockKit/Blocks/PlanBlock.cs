@@ -6,7 +6,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a plan block (<c>type: "plan"</c>) that organizes and tracks a list of tasks.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/plan-block">Slack Plan Block Documentation</seealso>
-public class PlanBlock : Block
+public class PlanBlock : Block, IMessageBlock
 {
     private const int MaxTasks = 50;
 

@@ -8,7 +8,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents an input block (<c>type: "input"</c>) that collects user input with a label, hint, and an interactive input element.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/input-block">Slack Input Block Documentation</seealso>
-public class InputBlock : Block
+public class InputBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 {
     private const int MaxLabelLength = 2000;
     private const int MaxHintLength = 2000;

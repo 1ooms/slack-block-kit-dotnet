@@ -7,7 +7,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents an actions block (<c>type: "actions"</c>) that holds interactive elements such as buttons, select menus, and date pickers.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/actions-block">Slack Actions Block Documentation</seealso>
-public class ActionsBlock : Block
+public class ActionsBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 {
     private const int MaxElements = 25;
 

@@ -7,7 +7,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a header block (<c>type: "header"</c>) that displays larger, bold plain-text heading for content.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/header-block">Slack Header Block Documentation</seealso>
-public class HeaderBlock : Block
+public class HeaderBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 {
     private const int MaxTextLength = 150;
     private const int MinLevel = 1;

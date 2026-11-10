@@ -7,7 +7,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a data table block (<c>type: "data_table"</c>) that displays paginated tabular data with interactive column and row features.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/data-table-block">Slack Data Table Block Documentation</seealso>
-public class DataTableBlock : Block
+public class DataTableBlock : Block, IMessageBlock, IHomeBlock
 {
     private const int MaxRows = 201;
     private const int MaxColumns = 20;

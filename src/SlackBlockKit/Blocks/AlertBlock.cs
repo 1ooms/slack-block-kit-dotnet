@@ -7,7 +7,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents an alert block (<c>type: "alert"</c>) that displays a callout message with a specific severity level.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/alert-block">Slack Alert Block Documentation</seealso>
-public class AlertBlock : Block
+public class AlertBlock : Block, IModalBlock, IHomeBlock
 {
     private const int MaxTextLength = 200;
 

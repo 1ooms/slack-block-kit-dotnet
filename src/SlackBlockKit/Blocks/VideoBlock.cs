@@ -7,7 +7,7 @@ namespace SlackBlockKit.Blocks;
 /// Represents a video block (<c>type: "video"</c>) that displays an embedded video player.
 /// </summary>
 /// <seealso href="https://docs.slack.dev/reference/block-kit/blocks/video-block">Slack Video Block Documentation</seealso>
-public class VideoBlock : Block
+public class VideoBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 {
     private const int MaxAuthorNameLength = 50;
     private const int MaxDescriptionLength = 200;
