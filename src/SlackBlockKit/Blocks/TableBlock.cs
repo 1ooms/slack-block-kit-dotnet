@@ -21,6 +21,9 @@ public class TableBlock : Block, IMessageBlock, IHomeBlock
 
     public override string Type => "table";
 
+    /// <remarks>
+    /// Deliberately allowed to be empty: the Slack API accepts a table with zero rows.
+    /// </remarks>
     [JsonPropertyName("rows")]
     public List<List<ITableCell>> Rows
     {

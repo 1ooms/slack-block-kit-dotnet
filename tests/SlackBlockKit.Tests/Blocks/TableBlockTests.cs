@@ -61,6 +61,19 @@ public class TableBlockTests
         Assert.Throws<ArgumentException>(() => new TableBlock([[]]));
     }
 
+    // The Slack API accepts a table with zero rows, so the library must not reject it.
+    [Fact]
+    public void Rows_AcceptsZeroRows()
+    {
+        var block = new TableBlock([]);
+        Assert.Empty(block.Rows);
+
+        block.Rows = [];
+        Assert.Empty(block.Rows);
+
+        AssertProperties(ToJson(block), "type", "rows");
+    }
+
     [Fact]
     public void Rows_AllowsUpTo100()
     {
