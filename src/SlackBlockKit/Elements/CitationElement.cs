@@ -46,7 +46,12 @@ public class CitationElement : Element, IRichTextSubElement
         set => field = ThrowIfNull(value);
     }
 
-    [JsonPropertyName("details")] public CitationDetails Details { get; set; }
+    [JsonPropertyName("details")]
+    public CitationDetails Details
+    {
+        get;
+        set => field = ThrowIfNull(value);
+    }
 
     [JsonPropertyName("from_llm")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

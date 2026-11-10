@@ -55,4 +55,10 @@ public class CitationElementTests
         Assert.Throws<ArgumentNullException>(() => new CitationElement(Url, null!, 0, details));
         Assert.Throws<ArgumentException>(() => new CitationElement(Url, "", 0, details));
     }
+
+    [Fact]
+    public void Details_ThrowsWhenNull()
+    {
+        Assert.Throws<ArgumentNullException>(() => new CitationElement(Url, "Source", 0, null!));
+    }
 }
