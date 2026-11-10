@@ -51,4 +51,29 @@ public class ConversationFilterObjectTests
     {
         Assert.Throws<ArgumentException>(() => new ConversationFilterObject([]));
     }
+
+    [Fact]
+    public void Initializer_ThrowsWhenNoFilterRemains()
+    {
+        Assert.Throws<ArgumentException>(() => new ConversationFilterObject([ConversationType.Im]) { Include = null });
+        Assert.Throws<ArgumentException>(() =>
+            new ConversationFilterObject(excludeExternalSharedChannels: true) { ExcludeExternalSharedChannels = null });
+        Assert.Throws<ArgumentException>(() =>
+            new ConversationFilterObject(excludeBotUsers: false) { ExcludeBotUsers = null });
+    }
+
+    [Fact]
+    public void Setters_AllowClearingAFilterWhenAnotherRemains()
+    {
+        var filter = new ConversationFilterObject([ConversationType.Im]);
+
+        Assert.Throws<ArgumentException>(() => filter.Include = null);
+
+        filter.ExcludeBotUsers = true;
+        filter.Include = null;
+
+        Assert.Null(filter.Include);
+        Assert.True(filter.ExcludeBotUsers);
+        Assert.Throws<ArgumentException>(() => filter.ExcludeBotUsers = null);
+    }
 }

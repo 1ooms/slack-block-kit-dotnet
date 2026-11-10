@@ -27,9 +27,9 @@ public class ConversationFilterObject : CompositionObject
     {
         ValidateAtLeastOne(include, excludeExternalSharedChannels, excludeBotUsers);
 
-        Include = include;
-        ExcludeExternalSharedChannels = excludeExternalSharedChannels;
-        ExcludeBotUsers = excludeBotUsers;
+        if (include != null) Include = include;
+        if (excludeExternalSharedChannels != null) ExcludeExternalSharedChannels = excludeExternalSharedChannels;
+        if (excludeBotUsers != null) ExcludeBotUsers = excludeBotUsers;
     }
 
     [JsonPropertyName("include")]
@@ -37,16 +37,37 @@ public class ConversationFilterObject : CompositionObject
     public List<ConversationType>? Include
     {
         get;
-        init => field = ThrowIfEmpty(value);
+        set
+        {
+            ThrowIfEmpty(value);
+            ValidateAtLeastOne(value, ExcludeExternalSharedChannels, ExcludeBotUsers);
+            field = value;
+        }
     }
 
     [JsonPropertyName("exclude_external_shared_channels")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? ExcludeExternalSharedChannels { get; init; }
+    public bool? ExcludeExternalSharedChannels
+    {
+        get;
+        set
+        {
+            ValidateAtLeastOne(Include, value, ExcludeBotUsers);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("exclude_bot_users")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? ExcludeBotUsers { get; init; }
+    public bool? ExcludeBotUsers
+    {
+        get;
+        set
+        {
+            ValidateAtLeastOne(Include, ExcludeExternalSharedChannels, value);
+            field = value;
+        }
+    }
 
     private static void ValidateAtLeastOne(List<ConversationType>? include, bool? excludeExternalSharedChannels,
         bool? excludeBotUsers)
