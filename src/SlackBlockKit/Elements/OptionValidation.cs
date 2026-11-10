@@ -1,4 +1,5 @@
 using SlackBlockKit.CompositionObjects;
+using SlackBlockKit.CompositionObjects.TextObjects;
 
 namespace SlackBlockKit.Elements;
 
@@ -85,19 +86,25 @@ internal static class OptionValidation
     }
 
     /// <summary>
-    /// Determines whether two options match based on instance identity or value and text equivalence.
+    /// Determines whether two options match exactly, as Slack requires for initial options:
+    /// same instance, or equal value, text (including its type), description and url.
     /// </summary>
     public static bool OptionMatches(OptionObject option, OptionObject targetOption)
     {
         if (ReferenceEquals(option, targetOption))
             return true;
 
-        if (option.Value != targetOption.Value)
-            return false;
+        return option.Value == targetOption.Value
+               && TextMatches(option.Text, targetOption.Text)
+               && TextMatches(option.Description, targetOption.Description)
+               && option.Url == targetOption.Url;
+    }
 
-        if (option.Text.Text != targetOption.Text.Text)
-            return false;
+    private static bool TextMatches(TextObject? text, TextObject? targetText)
+    {
+        if (text == null || targetText == null)
+            return text == null && targetText == null;
 
-        return true;
+        return text.Type == targetText.Type && text.Text == targetText.Text;
     }
 }
