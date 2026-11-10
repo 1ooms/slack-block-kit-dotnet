@@ -12,9 +12,9 @@ public class MultiStaticSelect : MultiSelectMenuBase
 {
     public MultiStaticSelect(
         string? actionId = null,
-        List<OptionObject>? options = null,
+        List<PlainTextOptionObject>? options = null,
         List<OptionGroupObject>? optionGroups = null,
-        List<OptionObject>? initialOptions = null,
+        List<PlainTextOptionObject>? initialOptions = null,
         ConfirmationDialogObject? confirm = null,
         int? maxSelectedItems = null,
         bool? focusOnLoad = null,
@@ -33,7 +33,7 @@ public class MultiStaticSelect : MultiSelectMenuBase
 
     [JsonPropertyName("options")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<OptionObject>? Options
+    public List<PlainTextOptionObject>? Options
     {
         get;
         init
@@ -61,7 +61,7 @@ public class MultiStaticSelect : MultiSelectMenuBase
 
     [JsonPropertyName("initial_options")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<OptionObject>? InitialOptions
+    public List<PlainTextOptionObject>? InitialOptions
     {
         get;
         init

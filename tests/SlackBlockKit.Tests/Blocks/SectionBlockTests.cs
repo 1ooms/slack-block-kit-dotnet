@@ -56,8 +56,8 @@ public class SectionBlockTests
     {
         ISectionElement[] accessories =
         [
-            new ButtonElement("Go"), new CheckboxesElement([Option()]), new DatePickerElement(), Image(),
-            new OverflowMenuElement([Option()]), new RadioButtonGroupElement([Option()]), new TimePickerElement(),
+            new ButtonElement("Go"), new CheckboxesElement([TextOption()]), new DatePickerElement(), Image(),
+            new OverflowMenuElement([OverflowOption()]), new RadioButtonGroupElement([TextOption()]), new TimePickerElement(),
             new WorkflowButtonElement("Run", "a", "https://slack.com/x"), new UsersSelect(), new MultiChannelsSelect()
         ];
 

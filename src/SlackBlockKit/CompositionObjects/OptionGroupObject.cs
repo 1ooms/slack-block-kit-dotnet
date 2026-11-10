@@ -13,13 +13,13 @@ public class OptionGroupObject : CompositionObject
     private const int MaxOptions = 100;
 
     [JsonConstructor]
-    public OptionGroupObject(PlainTextObject label, List<OptionObject> options)
+    public OptionGroupObject(PlainTextObject label, List<PlainTextOptionObject> options)
     {
         Label = label;
         Options = options;
     }
 
-    public OptionGroupObject(string label, List<OptionObject> options)
+    public OptionGroupObject(string label, List<PlainTextOptionObject> options)
         : this(new PlainTextObject(label), options)
     {
     }
@@ -32,7 +32,7 @@ public class OptionGroupObject : CompositionObject
     }
 
     [JsonPropertyName("options")]
-    public List<OptionObject> Options
+    public List<PlainTextOptionObject> Options
     {
         get;
         set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);

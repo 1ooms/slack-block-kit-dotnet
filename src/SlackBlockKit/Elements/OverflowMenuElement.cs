@@ -12,7 +12,7 @@ public class OverflowMenuElement : ActionElement, IActionsElement, ISectionEleme
     private const int MaxOptions = 5;
 
     public OverflowMenuElement(
-        List<OptionObject> options,
+        List<OverflowOptionObject> options,
         string? actionId = null,
         ConfirmationDialogObject? confirm = null)
     {
@@ -24,7 +24,7 @@ public class OverflowMenuElement : ActionElement, IActionsElement, ISectionEleme
     public override string Type => "overflow";
 
     [JsonPropertyName("options")]
-    public List<OptionObject> Options
+    public List<OverflowOptionObject> Options
     {
         get;
         set => field = ThrowIfNullOrEmptyOrExceedsCount(value, MaxOptions);

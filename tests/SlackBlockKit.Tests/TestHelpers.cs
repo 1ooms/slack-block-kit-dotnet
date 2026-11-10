@@ -43,7 +43,11 @@ public static class TestHelpers
         return json.GetProperty(name).GetProperty("text").GetString();
     }
 
-    public static OptionObject Option(string value = "value") => new($"Text {value}", value);
+    public static PlainTextOptionObject Option(string value = "value") => new($"Text {value}", value);
+
+    public static TextOptionObject TextOption(string value = "value") => new($"Text {value}", value);
+
+    public static OverflowOptionObject OverflowOption(string value = "value") => new($"Text {value}", value);
 
     public static ConfirmationDialogObject Confirm() => new("Title", "Text", "Yes", "No");
 

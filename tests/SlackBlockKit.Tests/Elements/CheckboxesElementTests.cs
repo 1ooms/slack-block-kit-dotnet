@@ -5,7 +5,7 @@ public class CheckboxesElementTests
     [Fact]
     public void Constructor_SetsAllProperties()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<TextOptionObject> { TextOption("a"), TextOption("b") };
         var confirm = Confirm();
 
         var element = new CheckboxesElement(options, "action", true, [options[0]], confirm, ["U1"]);
@@ -22,7 +22,7 @@ public class CheckboxesElementTests
     [Fact]
     public void Serialize_WritesAllFields()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<TextOptionObject> { TextOption("a"), TextOption("b") };
 
         var json = ToJson(new CheckboxesElement(options, "action", true, [options[1]], Confirm(), ["U1"]));
 
@@ -37,7 +37,7 @@ public class CheckboxesElementTests
     [Fact]
     public void Serialize_OmitsNullFields()
     {
-        AssertProperties(ToJson(new CheckboxesElement([Option()])), "type", "options");
+        AssertProperties(ToJson(new CheckboxesElement([TextOption()])), "type", "options");
     }
 
     [Fact]
@@ -50,35 +50,35 @@ public class CheckboxesElementTests
     [Fact]
     public void Options_AllowsUpTo10()
     {
-        var options = Enumerable.Range(0, 10).Select(i => Option(i.ToString())).ToList();
+        var options = Enumerable.Range(0, 10).Select(i => TextOption(i.ToString())).ToList();
 
         Assert.Equal(10, new CheckboxesElement(options).Options.Count);
 
-        options.Add(Option("extra"));
+        options.Add(TextOption("extra"));
         Assert.Throws<ArgumentException>(() => new CheckboxesElement(options));
     }
 
     [Fact]
     public void InitialOptions_ThrowsWhenNotInOptions()
     {
-        Assert.Throws<ArgumentException>(() => new CheckboxesElement([Option("a")], initialOptions: [Option("b")]));
+        Assert.Throws<ArgumentException>(() => new CheckboxesElement([TextOption("a")], initialOptions: [TextOption("b")]));
     }
 
     [Fact]
     public void InitialOptions_AllowsUpTo10()
     {
-        var initialOptions = Enumerable.Range(0, 10).Select(_ => Option("a")).ToList();
+        var initialOptions = Enumerable.Range(0, 10).Select(_ => TextOption("a")).ToList();
 
-        Assert.Equal(10, new CheckboxesElement([Option("a")], initialOptions: initialOptions).InitialOptions!.Count);
+        Assert.Equal(10, new CheckboxesElement([TextOption("a")], initialOptions: initialOptions).InitialOptions!.Count);
 
-        initialOptions.Add(Option("a"));
-        Assert.Throws<ArgumentException>(() => new CheckboxesElement([Option("a")], initialOptions: initialOptions));
+        initialOptions.Add(TextOption("a"));
+        Assert.Throws<ArgumentException>(() => new CheckboxesElement([TextOption("a")], initialOptions: initialOptions));
     }
 
     [Fact]
     public void InitialOptions_MatchesEquivalentOptionInstances()
     {
-        var element = new CheckboxesElement([Option("a")], initialOptions: [Option("a")]);
+        var element = new CheckboxesElement([TextOption("a")], initialOptions: [TextOption("a")]);
 
         Assert.Single(element.InitialOptions!);
     }
@@ -86,17 +86,17 @@ public class CheckboxesElementTests
     [Fact]
     public void Options_SetterRevalidatesInitialOptions()
     {
-        var original = new List<OptionObject> { Option("a"), Option("b") };
+        var original = new List<TextOptionObject> { TextOption("a"), TextOption("b") };
         var element = new CheckboxesElement(original, initialOptions: [original[0]]);
 
-        Assert.Throws<ArgumentException>(() => element.Options = [Option("c")]);
+        Assert.Throws<ArgumentException>(() => element.Options = [TextOption("c")]);
         Assert.Same(original, element.Options);
 
-        element.Options = [Option("a"), Option("c")];
+        element.Options = [TextOption("a"), TextOption("c")];
         Assert.Equal(2, element.Options.Count);
 
         element.InitialOptions = null;
-        element.Options = [Option("d")];
+        element.Options = [TextOption("d")];
         Assert.Single(element.Options);
     }
 }

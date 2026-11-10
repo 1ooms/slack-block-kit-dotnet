@@ -5,7 +5,7 @@ public class OverflowMenuElementTests
     [Fact]
     public void Constructor_SetsAllProperties()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<OverflowOptionObject> { OverflowOption("a"), OverflowOption("b") };
         var confirm = Confirm();
 
         var element = new OverflowMenuElement(options, "action", confirm);
@@ -19,7 +19,7 @@ public class OverflowMenuElementTests
     [Fact]
     public void Serialize_WritesAllFields()
     {
-        var json = ToJson(new OverflowMenuElement([Option("a")], "action", Confirm()));
+        var json = ToJson(new OverflowMenuElement([OverflowOption("a")], "action", Confirm()));
 
         AssertProperties(json, "type", "options", "action_id", "confirm");
         Assert.Equal("overflow", json.GetProperty("type").GetString());
@@ -29,7 +29,7 @@ public class OverflowMenuElementTests
     [Fact]
     public void Serialize_OmitsNullFields()
     {
-        AssertProperties(ToJson(new OverflowMenuElement([Option()])), "type", "options");
+        AssertProperties(ToJson(new OverflowMenuElement([OverflowOption()])), "type", "options");
     }
 
     [Fact]
@@ -42,11 +42,11 @@ public class OverflowMenuElementTests
     [Fact]
     public void Options_AllowsUpTo5()
     {
-        var options = Enumerable.Range(0, 5).Select(i => Option(i.ToString())).ToList();
+        var options = Enumerable.Range(0, 5).Select(i => OverflowOption(i.ToString())).ToList();
 
         Assert.Equal(5, new OverflowMenuElement(options).Options.Count);
 
-        options.Add(Option("extra"));
+        options.Add(OverflowOption("extra"));
         Assert.Throws<ArgumentException>(() => new OverflowMenuElement(options));
     }
 }

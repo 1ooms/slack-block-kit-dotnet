@@ -5,7 +5,7 @@ public class StaticSelectTests
     [Fact]
     public void Constructor_WithOptions_SetsAllProperties()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<PlainTextOptionObject> { Option("a"), Option("b") };
         var confirm = Confirm();
 
         var select = new StaticSelect("action", options, null, options[1], confirm, true, "Pick");
@@ -23,7 +23,7 @@ public class StaticSelectTests
     [Fact]
     public void Serialize_WithOptions_WritesAllFields()
     {
-        var options = new List<OptionObject> { Option("a") };
+        var options = new List<PlainTextOptionObject> { Option("a") };
 
         var json = ToJson(new StaticSelect("action", options, null, options[0], Confirm(), true, "Pick"));
 

@@ -13,7 +13,7 @@ public class MultiExternalSelect : MultiSelectMenuBase
     public MultiExternalSelect(
         string? actionId = null,
         int? minQueryLength = null,
-        List<OptionObject>? initialOptions = null,
+        List<PlainTextOptionObject>? initialOptions = null,
         ConfirmationDialogObject? confirm = null,
         int? maxSelectedItems = null,
         PlainTextObject? placeholder = null)
@@ -27,7 +27,7 @@ public class MultiExternalSelect : MultiSelectMenuBase
 
     [JsonPropertyName("initial_options")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<OptionObject>? InitialOptions
+    public List<PlainTextOptionObject>? InitialOptions
     {
         get;
         set

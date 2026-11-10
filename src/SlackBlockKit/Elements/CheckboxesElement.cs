@@ -12,10 +12,10 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
     private const int MaxOptions = 10;
 
     public CheckboxesElement(
-        List<OptionObject> options,
+        List<TextOptionObject> options,
         string? actionId = null,
         bool? focusOnLoad = null,
-        List<OptionObject>? initialOptions = null,
+        List<TextOptionObject>? initialOptions = null,
         ConfirmationDialogObject? confirm = null,
         List<string>? visibleToUserIds = null)
     {
@@ -32,7 +32,7 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
     public override string Type => "checkboxes";
 
     [JsonPropertyName("options")]
-    public List<OptionObject> Options
+    public List<TextOptionObject> Options
     {
         get;
         set
@@ -45,7 +45,7 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
 
     [JsonPropertyName("initial_options")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<OptionObject>? InitialOptions
+    public List<TextOptionObject>? InitialOptions
     {
         get;
         set
@@ -67,7 +67,7 @@ public class CheckboxesElement : ActionElement, IActionsElement, IInputElement, 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<string>? VisibleToUserIds { get; set; }
 
-    private static void ValidateInitialOptions(List<OptionObject> options, List<OptionObject>? initialOptions)
+    private static void ValidateInitialOptions(List<TextOptionObject> options, List<TextOptionObject>? initialOptions)
     {
         if (initialOptions == null) return;
         ThrowIfExceedsCount(initialOptions, MaxOptions);

@@ -12,9 +12,9 @@ public class RadioButtonGroupElement : ActionElement, IActionsElement, IInputEle
     private const int MaxOptions = 10;
 
     public RadioButtonGroupElement(
-        List<OptionObject> options,
+        List<TextOptionObject> options,
         string? actionId = null,
-        OptionObject? initialOption = null,
+        TextOptionObject? initialOption = null,
         ConfirmationDialogObject? confirm = null,
         bool? focusOnLoad = null)
     {
@@ -28,7 +28,7 @@ public class RadioButtonGroupElement : ActionElement, IActionsElement, IInputEle
     public override string Type => "radio_buttons";
 
     [JsonPropertyName("options")]
-    public List<OptionObject> Options
+    public List<TextOptionObject> Options
     {
         get;
         set
@@ -41,7 +41,7 @@ public class RadioButtonGroupElement : ActionElement, IActionsElement, IInputEle
 
     [JsonPropertyName("initial_option")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public OptionObject? InitialOption
+    public TextOptionObject? InitialOption
     {
         get;
         set
@@ -59,7 +59,7 @@ public class RadioButtonGroupElement : ActionElement, IActionsElement, IInputEle
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? FocusOnLoad { get; set; }
 
-    private static void ValidateInitialOption(List<OptionObject> options, OptionObject? initialOption)
+    private static void ValidateInitialOption(List<TextOptionObject> options, TextOptionObject? initialOption)
     {
         if (initialOption != null && !options.Any(option => OptionValidation.OptionMatches(option, initialOption)))
             throw new ArgumentException("InitialOption must be present in Options.", nameof(InitialOption));

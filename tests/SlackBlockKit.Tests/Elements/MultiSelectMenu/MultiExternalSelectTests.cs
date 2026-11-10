@@ -5,7 +5,7 @@ public class MultiExternalSelectTests
     [Fact]
     public void Constructor_SetsAllProperties()
     {
-        var initial = new List<OptionObject> { Option() };
+        var initial = new List<PlainTextOptionObject> { Option() };
         var confirm = Confirm();
 
         var select = new MultiExternalSelect("action", 2, initial, confirm, 5, "Search");

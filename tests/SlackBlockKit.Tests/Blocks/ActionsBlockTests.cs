@@ -27,8 +27,8 @@ public class ActionsBlockTests
     public void Serialize_WritesElementsWithDiscriminators()
     {
         var json = ToJson(new ActionsBlock([
-            new ButtonElement("A"), new StaticSelect(options: [Option()]), new CheckboxesElement([Option()]),
-            new OverflowMenuElement([Option()]), new WorkflowButtonElement("Run", "a", "https://slack.com/x")
+            new ButtonElement("A"), new StaticSelect(options: [Option()]), new CheckboxesElement([TextOption()]),
+            new OverflowMenuElement([OverflowOption()]), new WorkflowButtonElement("Run", "a", "https://slack.com/x")
         ], "actions_1"));
 
         AssertProperties(json, "type", "block_id", "elements");

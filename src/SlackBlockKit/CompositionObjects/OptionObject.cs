@@ -4,35 +4,23 @@ using SlackBlockKit.CompositionObjects.TextObjects;
 namespace SlackBlockKit.CompositionObjects;
 
 /// <summary>
-/// Represents an option in select menus, multi-select menus, checkbox groups, radio button groups, or overflow menus.
+/// Base class for an option in select menus, multi-select menus, overflow menus, checkboxes or radio button groups.
 /// </summary>
-/// <seealso href="https://docs.slack.dev/reference/block-kit/composition-objects/option">Slack Option Object Documentation</seealso>
-public class OptionObject : CompositionObject
+/// <remarks>
+/// Use <see cref="PlainTextOptionObject"/> for select and multi-select menus, which only support <c>plain_text</c>,
+/// <see cref="OverflowOptionObject"/> for overflow menus, which only support <c>plain_text</c> but also allow a URL,
+/// and <see cref="TextOptionObject"/> for checkboxes and radio buttons, which also support <c>mrkdwn</c>.
+/// </remarks>
+/// <seealso href="https://docs.slack.dev/reference/block-kit/composition-objects/option-object">Slack Option Object Documentation</seealso>
+public abstract class OptionObject : CompositionObject
 {
-    private const int MaxTextLength = 75;
+    protected const int MaxTextLength = 75;
+    protected const int MaxDescriptionLength = 75;
     private const int MaxValueLength = 75;
-    private const int MaxDescriptionLength = 75;
-    private const int MaxUrlLength = 3000;
 
-    [JsonConstructor]
-    public OptionObject(TextObject text, string value, PlainTextObject? description = null, string? url = null)
+    protected OptionObject(string value)
     {
-        Text = text;
         Value = value;
-        Description = description;
-        Url = url;
-    }
-
-    public OptionObject(string text, string value, string? description = null, string? url = null)
-        : this(new PlainTextObject(text), value, description != null ? new PlainTextObject(description) : null, url)
-    {
-    }
-
-    [JsonPropertyName("text")]
-    public TextObject Text
-    {
-        get;
-        set => field = ThrowIfNullOrExceedsLength(value, MaxTextLength);
     }
 
     [JsonPropertyName("value")]
@@ -42,19 +30,9 @@ public class OptionObject : CompositionObject
         set => field = ThrowIfNullOrEmptyOrExceedsLength(value, MaxValueLength);
     }
 
-    [JsonPropertyName("description")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public PlainTextObject? Description
-    {
-        get;
-        set => field = ThrowIfExceedsLength(value, MaxDescriptionLength);
-    }
+    /// <summary>The option's text, regardless of which text object type the subclass allows.</summary>
+    internal abstract TextObject OptionText { get; }
 
-    [JsonPropertyName("url")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Url
-    {
-        get;
-        set => field = ThrowIfEmptyOrExceedsLength(value, MaxUrlLength);
-    }
+    /// <summary>The option's description, regardless of which text object type the subclass allows.</summary>
+    internal abstract TextObject? OptionDescription { get; }
 }

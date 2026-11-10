@@ -12,9 +12,9 @@ public class StaticSelect : SelectMenuBase
 {
     public StaticSelect(
         string? actionId = null,
-        List<OptionObject>? options = null,
+        List<PlainTextOptionObject>? options = null,
         List<OptionGroupObject>? optionGroups = null,
-        OptionObject? initialOption = null,
+        PlainTextOptionObject? initialOption = null,
         ConfirmationDialogObject? confirm = null,
         bool? focusOnLoad = null,
         PlainTextObject? placeholder = null)
@@ -31,7 +31,7 @@ public class StaticSelect : SelectMenuBase
 
     [JsonPropertyName("options")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<OptionObject>? Options
+    public List<PlainTextOptionObject>? Options
     {
         get;
         init
@@ -59,7 +59,7 @@ public class StaticSelect : SelectMenuBase
 
     [JsonPropertyName("initial_option")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public OptionObject? InitialOption
+    public PlainTextOptionObject? InitialOption
     {
         get;
         init

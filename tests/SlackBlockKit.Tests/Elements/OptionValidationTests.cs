@@ -86,48 +86,37 @@ public class OptionValidationTests
     [Fact]
     public void OptionMatches_ComparesValueAndText()
     {
-        Assert.True(OptionValidation.OptionMatches(new OptionObject("A", "1"), new OptionObject("A", "1")));
-        Assert.False(OptionValidation.OptionMatches(new OptionObject("A", "1"), new OptionObject("A", "2")));
-        Assert.False(OptionValidation.OptionMatches(new OptionObject("A", "1"), new OptionObject("B", "1")));
+        Assert.True(OptionValidation.OptionMatches(new TextOptionObject("A", "1"), new TextOptionObject("A", "1")));
+        Assert.False(OptionValidation.OptionMatches(new TextOptionObject("A", "1"), new TextOptionObject("A", "2")));
+        Assert.False(OptionValidation.OptionMatches(new TextOptionObject("A", "1"), new TextOptionObject("B", "1")));
     }
 
     [Fact]
     public void OptionMatches_ComparesTextType()
     {
         Assert.False(OptionValidation.OptionMatches(
-            new OptionObject(new PlainTextObject("A"), "1"), new OptionObject(new MarkdownTextObject("A"), "1")));
+            new TextOptionObject(new PlainTextObject("A"), "1"), new TextOptionObject(new MarkdownTextObject("A"), "1")));
         Assert.True(OptionValidation.OptionMatches(
-            new OptionObject(new MarkdownTextObject("A"), "1"), new OptionObject(new MarkdownTextObject("A"), "1")));
+            new TextOptionObject(new MarkdownTextObject("A"), "1"), new TextOptionObject(new MarkdownTextObject("A"), "1")));
     }
 
     [Fact]
     public void OptionMatches_ComparesDescription()
     {
-        Assert.True(OptionValidation.OptionMatches(new OptionObject("A", "1", "d"), new OptionObject("A", "1", "d")));
-        Assert.False(OptionValidation.OptionMatches(new OptionObject("A", "1", "d"), new OptionObject("A", "1", "e")));
-        Assert.False(OptionValidation.OptionMatches(new OptionObject("A", "1", "d"), new OptionObject("A", "1")));
-        Assert.False(OptionValidation.OptionMatches(new OptionObject("A", "1"), new OptionObject("A", "1", "d")));
-    }
-
-    [Fact]
-    public void OptionMatches_ComparesUrl()
-    {
-        Assert.True(OptionValidation.OptionMatches(
-            new OptionObject("A", "1", url: "https://a.com"), new OptionObject("A", "1", url: "https://a.com")));
-        Assert.False(OptionValidation.OptionMatches(
-            new OptionObject("A", "1", url: "https://a.com"), new OptionObject("A", "1", url: "https://b.com")));
-        Assert.False(OptionValidation.OptionMatches(
-            new OptionObject("A", "1", url: "https://a.com"), new OptionObject("A", "1")));
+        Assert.True(OptionValidation.OptionMatches(new TextOptionObject("A", "1", "d"), new TextOptionObject("A", "1", "d")));
+        Assert.False(OptionValidation.OptionMatches(new TextOptionObject("A", "1", "d"), new TextOptionObject("A", "1", "e")));
+        Assert.False(OptionValidation.OptionMatches(new TextOptionObject("A", "1", "d"), new TextOptionObject("A", "1")));
+        Assert.False(OptionValidation.OptionMatches(new TextOptionObject("A", "1"), new TextOptionObject("A", "1", "d")));
     }
 
     [Fact]
     public void InitialOption_ThrowsWhenOnlyDescriptionDiffers()
     {
         Assert.Throws<ArgumentException>(() => new StaticSelect(
-            options: [new OptionObject("A", "1", "d")], initialOption: new OptionObject("A", "1", "other")));
+            options: [new PlainTextOptionObject("A", "1", "d")], initialOption: new PlainTextOptionObject("A", "1", "other")));
         Assert.Throws<ArgumentException>(() => new RadioButtonGroupElement(
-            [new OptionObject("A", "1", "d")], initialOption: new OptionObject("A", "1")));
+            [new TextOptionObject("A", "1", "d")], initialOption: new TextOptionObject("A", "1")));
         Assert.Throws<ArgumentException>(() => new CheckboxesElement(
-            [new OptionObject("A", "1", "d")], initialOptions: [new OptionObject("A", "1")]));
+            [new TextOptionObject("A", "1", "d")], initialOptions: [new TextOptionObject("A", "1")]));
     }
 }

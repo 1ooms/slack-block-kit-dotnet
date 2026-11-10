@@ -58,9 +58,9 @@ public class InputBlockTests
     {
         IInputElement[] elements =
         [
-            new CheckboxesElement([Option()]), new DatePickerElement(), new DateTimePickerElement(),
+            new CheckboxesElement([TextOption()]), new DatePickerElement(), new DateTimePickerElement(),
             new EmailInputElement(), new FileInputElement(), new NumberInputElement(), Input(),
-            new RadioButtonGroupElement([Option()]), new RichTextInputElement(), new TimePickerElement(),
+            new RadioButtonGroupElement([TextOption()]), new RichTextInputElement(), new TimePickerElement(),
             new UrlInputElement(), new StaticSelect(options: [Option()]), new MultiUsersSelect()
         ];
 

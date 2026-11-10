@@ -12,7 +12,7 @@ public class ExternalSelect : SelectMenuBase
 {
     public ExternalSelect(
         string? actionId = null,
-        OptionObject? initialOption = null,
+        PlainTextOptionObject? initialOption = null,
         int? minQueryLength = null,
         ConfirmationDialogObject? confirm = null,
         bool? focusOnLoad = null,
@@ -27,7 +27,7 @@ public class ExternalSelect : SelectMenuBase
 
     [JsonPropertyName("initial_option")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public OptionObject? InitialOption { get; set; }
+    public PlainTextOptionObject? InitialOption { get; set; }
 
     [JsonPropertyName("min_query_length")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

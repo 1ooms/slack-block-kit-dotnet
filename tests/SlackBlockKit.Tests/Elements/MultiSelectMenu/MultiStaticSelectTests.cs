@@ -5,7 +5,7 @@ public class MultiStaticSelectTests
     [Fact]
     public void Constructor_WithOptions_SetsAllProperties()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<PlainTextOptionObject> { Option("a"), Option("b") };
         var confirm = Confirm();
 
         var select = new MultiStaticSelect("action", options, null, [options[0]], confirm, 2, true, "Pick");
@@ -24,7 +24,7 @@ public class MultiStaticSelectTests
     [Fact]
     public void Serialize_WithOptions_WritesAllFields()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<PlainTextOptionObject> { Option("a"), Option("b") };
 
         var json = ToJson(new MultiStaticSelect("action", options, null, [options[1]], Confirm(), 2, true, "Pick"));
 
@@ -161,7 +161,7 @@ public class MultiStaticSelectTests
     [Fact]
     public void InitialOptions_CannotExceedMaxSelectedItems()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<PlainTextOptionObject> { Option("a"), Option("b") };
 
         Assert.NotNull(new MultiStaticSelect(options: options, initialOptions: [Option("a"), Option("b")],
             maxSelectedItems: 2));

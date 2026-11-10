@@ -5,7 +5,7 @@ public class RadioButtonGroupElementTests
     [Fact]
     public void Constructor_SetsAllProperties()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<TextOptionObject> { TextOption("a"), TextOption("b") };
         var confirm = Confirm();
 
         var element = new RadioButtonGroupElement(options, "action", options[1], confirm, true);
@@ -21,7 +21,7 @@ public class RadioButtonGroupElementTests
     [Fact]
     public void Serialize_WritesAllFields()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<TextOptionObject> { TextOption("a"), TextOption("b") };
 
         var json = ToJson(new RadioButtonGroupElement(options, "action", options[0], Confirm(), false));
 
@@ -33,7 +33,7 @@ public class RadioButtonGroupElementTests
     [Fact]
     public void Serialize_OmitsNullFields()
     {
-        AssertProperties(ToJson(new RadioButtonGroupElement([Option()])), "type", "options");
+        AssertProperties(ToJson(new RadioButtonGroupElement([TextOption()])), "type", "options");
     }
 
     [Fact]
@@ -46,24 +46,24 @@ public class RadioButtonGroupElementTests
     [Fact]
     public void Options_AllowsUpTo10()
     {
-        var options = Enumerable.Range(0, 10).Select(i => Option(i.ToString())).ToList();
+        var options = Enumerable.Range(0, 10).Select(i => TextOption(i.ToString())).ToList();
 
         Assert.Equal(10, new RadioButtonGroupElement(options).Options.Count);
 
-        options.Add(Option("extra"));
+        options.Add(TextOption("extra"));
         Assert.Throws<ArgumentException>(() => new RadioButtonGroupElement(options));
     }
 
     [Fact]
     public void InitialOption_ThrowsWhenNotInOptions()
     {
-        Assert.Throws<ArgumentException>(() => new RadioButtonGroupElement([Option("a")], initialOption: Option("b")));
+        Assert.Throws<ArgumentException>(() => new RadioButtonGroupElement([TextOption("a")], initialOption: TextOption("b")));
     }
 
     [Fact]
     public void InitialOption_MatchesEquivalentOptionInstance()
     {
-        var element = new RadioButtonGroupElement([Option("a")], initialOption: Option("a"));
+        var element = new RadioButtonGroupElement([TextOption("a")], initialOption: TextOption("a"));
 
         Assert.Equal("a", element.InitialOption!.Value);
     }
@@ -71,24 +71,24 @@ public class RadioButtonGroupElementTests
     [Fact]
     public void Options_SetterRevalidatesInitialOption()
     {
-        var original = new List<OptionObject> { Option("a"), Option("b") };
+        var original = new List<TextOptionObject> { TextOption("a"), TextOption("b") };
         var element = new RadioButtonGroupElement(original, initialOption: original[0]);
 
-        Assert.Throws<ArgumentException>(() => element.Options = [Option("c")]);
+        Assert.Throws<ArgumentException>(() => element.Options = [TextOption("c")]);
         Assert.Same(original, element.Options);
 
-        element.Options = [Option("a"), Option("c")];
+        element.Options = [TextOption("a"), TextOption("c")];
         Assert.Equal(2, element.Options.Count);
 
         element.InitialOption = null;
-        element.Options = [Option("d")];
+        element.Options = [TextOption("d")];
         Assert.Single(element.Options);
     }
 
     [Fact]
     public void InitialOption_SurvivesSerializationRoundTrip()
     {
-        var options = new List<OptionObject> { Option("a"), Option("b") };
+        var options = new List<TextOptionObject> { TextOption("a"), TextOption("b") };
         var json = SlackSerializer.Serialize(new RadioButtonGroupElement(options, initialOption: options[1]));
 
         var element = SlackSerializer.Deserialize<RadioButtonGroupElement>(json);

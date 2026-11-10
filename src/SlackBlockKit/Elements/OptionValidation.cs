@@ -14,7 +14,7 @@ internal static class OptionValidation
     /// Validates that either options or optionGroups is provided, but not both.
     /// </summary>
     public static void ValidateOptionsAndOptionGroups(
-        List<OptionObject>? options,
+        IEnumerable<OptionObject>? options,
         List<OptionGroupObject>? optionGroups,
         string? targetName = null)
     {
@@ -31,7 +31,7 @@ internal static class OptionValidation
     /// Validates that initialOption matches an option in either options or optionGroups.
     /// </summary>
     public static void ValidateInitialOption(
-        List<OptionObject>? options,
+        IEnumerable<OptionObject>? options,
         List<OptionGroupObject>? optionGroups,
         OptionObject? initialOption)
     {
@@ -50,9 +50,9 @@ internal static class OptionValidation
     /// Validates that all items in initialOptions match an option in either options or optionGroups.
     /// </summary>
     public static void ValidateInitialOptions(
-        List<OptionObject>? options,
+        IEnumerable<OptionObject>? options,
         List<OptionGroupObject>? optionGroups,
-        List<OptionObject>? initialOptions)
+        IEnumerable<OptionObject>? initialOptions)
     {
         if (initialOptions == null)
             return;
@@ -72,7 +72,7 @@ internal static class OptionValidation
     /// Determines whether the given options or optionGroups contain a matching option.
     /// </summary>
     public static bool ContainsOption(
-        List<OptionObject>? options,
+        IEnumerable<OptionObject>? options,
         List<OptionGroupObject>? optionGroups,
         OptionObject optionToFind)
     {
@@ -87,7 +87,7 @@ internal static class OptionValidation
 
     /// <summary>
     /// Determines whether two options match exactly, as Slack requires for initial options:
-    /// same instance, or equal value, text (including its type), description and url.
+    /// same instance, or equal value, text (including its type) and description.
     /// </summary>
     public static bool OptionMatches(OptionObject option, OptionObject targetOption)
     {
@@ -95,9 +95,8 @@ internal static class OptionValidation
             return true;
 
         return option.Value == targetOption.Value
-               && TextMatches(option.Text, targetOption.Text)
-               && TextMatches(option.Description, targetOption.Description)
-               && option.Url == targetOption.Url;
+               && TextMatches(option.OptionText, targetOption.OptionText)
+               && TextMatches(option.OptionDescription, targetOption.OptionDescription);
     }
 
     private static bool TextMatches(TextObject? text, TextObject? targetText)
