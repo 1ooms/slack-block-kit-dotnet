@@ -105,13 +105,32 @@ public abstract class SeriesChart : Chart
         // Skipped while the constructor is still assigning the first of the two properties.
         if (series == null || axisConfig == null) return;
 
-        var labels = series.SelectMany(s => s.Data).Select(p => p.Label).ToHashSet();
+        // Every series must have exactly one data point for every category.
+        var categories = axisConfig.Categories.ToHashSet();
 
-        foreach (var category in axisConfig.Categories)
-            if (!labels.Contains(category))
-                throw new ArgumentException(
-                    $"Category '{category}' in AxisConfig.Categories does not match any label in Series.Data.",
-                    nameof(AxisConfig));
+        foreach (var s in series)
+        {
+            var labels = new HashSet<string>();
+
+            foreach (var point in s.Data)
+            {
+                if (!categories.Contains(point.Label))
+                    throw new ArgumentException(
+                        $"Data point '{point.Label}' in series '{s.Name}' does not match any category in AxisConfig.Categories.",
+                        nameof(Series));
+
+                if (!labels.Add(point.Label))
+                    throw new ArgumentException(
+                        $"Series '{s.Name}' has more than one data point for category '{point.Label}'.",
+                        nameof(Series));
+            }
+
+            foreach (var category in categories)
+                if (!labels.Contains(category))
+                    throw new ArgumentException(
+                        $"Series '{s.Name}' has no data point for category '{category}'.",
+                        nameof(Series));
+        }
     }
 }
 

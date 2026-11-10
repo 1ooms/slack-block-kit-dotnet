@@ -21,7 +21,7 @@ public class BarChartTests
     [Fact]
     public void Serialize_AsChart_WritesAllFields()
     {
-        var json = ToJson(new List<Chart> { new BarChart(Series(), new ChartAxisConfig(["Q1"], "Quarter", "Sales")) })[0];
+        var json = ToJson(new List<Chart> { new BarChart(Series(), new ChartAxisConfig(["Q1", "Q2"], "Quarter", "Sales")) })[0];
 
         AssertProperties(json, "type", "series", "axis_config");
         Assert.Equal("bar", json.GetProperty("type").GetString());
@@ -30,17 +30,46 @@ public class BarChartTests
     }
 
     [Fact]
-    public void Constructor_ThrowsWhenCategoryHasNoMatchingLabel()
+    public void Constructor_ThrowsWhenSeriesMissesACategory()
     {
-        Assert.Throws<ArgumentException>(() => new BarChart(Series(), new ChartAxisConfig(["Q3"])));
+        Assert.Throws<ArgumentException>(() => new BarChart(Series(), new ChartAxisConfig(["Q1", "Q2", "Q3"])));
     }
 
     [Fact]
-    public void Constructor_AcceptsCategoriesFromAnySeries()
+    public void Constructor_ThrowsWhenDataPointHasNoCategory()
+    {
+        Assert.Throws<ArgumentException>(() => new BarChart(Series(), new ChartAxisConfig(["Q1"])));
+    }
+
+    [Fact]
+    public void Constructor_ThrowsWhenSeriesHasDuplicateDataPoints()
+    {
+        var series = new List<ChartDataSeries>
+        {
+            new("A", [new ChartDataPoint("Q1", 1), new ChartDataPoint("Q1", 2)])
+        };
+
+        Assert.Throws<ArgumentException>(() => new BarChart(series, new ChartAxisConfig(["Q1"])));
+    }
+
+    [Fact]
+    public void Constructor_ThrowsWhenCategoriesAreSpreadOverSeries()
     {
         var series = new List<ChartDataSeries>
         {
             new("A", [new ChartDataPoint("Q1", 1)]), new("B", [new ChartDataPoint("Q2", 2)])
+        };
+
+        Assert.Throws<ArgumentException>(() => new BarChart(series, new ChartAxisConfig(["Q1", "Q2"])));
+    }
+
+    [Fact]
+    public void Constructor_AcceptsEverySeriesCoveringEveryCategory()
+    {
+        var series = new List<ChartDataSeries>
+        {
+            new("A", [new ChartDataPoint("Q1", 1), new ChartDataPoint("Q2", 2)]),
+            new("B", [new ChartDataPoint("Q2", 3), new ChartDataPoint("Q1", 4)])
         };
 
         Assert.NotNull(new BarChart(series, new ChartAxisConfig(["Q1", "Q2"])));
@@ -56,13 +85,17 @@ public class BarChartTests
     [Fact]
     public void Setters_RevalidateCategories()
     {
-        var chart = new BarChart(Series(), new ChartAxisConfig(["Q1"]));
+        var chart = new BarChart(Series(), new ChartAxisConfig(["Q1", "Q2"]));
 
-        Assert.Throws<ArgumentException>(() => chart.AxisConfig = new ChartAxisConfig(["Missing"]));
+        Assert.Throws<ArgumentException>(() => chart.AxisConfig = new ChartAxisConfig(["Q1"]));
+        Assert.Throws<ArgumentException>(() => chart.AxisConfig = new ChartAxisConfig(["Q1", "Q2", "Q3"]));
         Assert.Throws<ArgumentException>(() =>
-            chart.Series = [new ChartDataSeries("Other", [new ChartDataPoint("Q9", 1)])]);
+            chart.Series = [new ChartDataSeries("Other", [new ChartDataPoint("Q1", 1)])]);
 
-        chart.AxisConfig = new ChartAxisConfig(["Q2"]);
-        Assert.Equal(["Q2"], chart.AxisConfig.Categories);
+        chart.AxisConfig = new ChartAxisConfig(["Q2", "Q1"]);
+        Assert.Equal(["Q2", "Q1"], chart.AxisConfig.Categories);
+
+        chart.Series = [new ChartDataSeries("Other", [new ChartDataPoint("Q2", 5), new ChartDataPoint("Q1", 6)])];
+        Assert.Equal("Other", chart.Series[0].Name);
     }
 }
