@@ -55,6 +55,10 @@ public class RichTextInputElement : ActionElement, IActionsElement, IInputElemen
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? FocusOnLoad { get; set; }
 
+    /// <remarks>
+    /// Deliberately not validated against <see cref="MaxLines"/>:
+    /// the Slack API accepts a minimum number of lines greater than the maximum number of lines.
+    /// </remarks>
     [JsonPropertyName("min_lines")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? MinLines
@@ -64,11 +68,15 @@ public class RichTextInputElement : ActionElement, IActionsElement, IInputElemen
         {
             if (value < MinMinAndMaxLines || value > MaxMinAndMaxLines)
                 throw new ArgumentException(
-                    $"MinLines must be between {MinMinAndMaxLines} and {MaxMinAndMaxLines} characters.", nameof(value));
+                    $"MinLines must be between {MinMinAndMaxLines} and {MaxMinAndMaxLines} lines.", nameof(value));
             field = value;
         }
     }
 
+    /// <remarks>
+    /// Deliberately not validated against <see cref="MinLines"/>:
+    /// the Slack API accepts a minimum number of lines greater than the maximum number of lines.
+    /// </remarks>
     [JsonPropertyName("max_lines")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public int? MaxLines
@@ -78,7 +86,7 @@ public class RichTextInputElement : ActionElement, IActionsElement, IInputElemen
         {
             if (value < MinMinAndMaxLines || value > MaxMinAndMaxLines)
                 throw new ArgumentException(
-                    $"MaxLines must be between {MinMinAndMaxLines} and {MaxMinAndMaxLines} characters.", nameof(value));
+                    $"MaxLines must be between {MinMinAndMaxLines} and {MaxMinAndMaxLines} lines.", nameof(value));
             field = value;
         }
     }

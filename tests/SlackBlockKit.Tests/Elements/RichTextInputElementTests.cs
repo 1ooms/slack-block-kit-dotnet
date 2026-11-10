@@ -67,4 +67,20 @@ public class RichTextInputElementTests
         Assert.NotNull(new RichTextInputElement(placeholder: Chars(150)));
         Assert.Throws<ArgumentException>(() => new RichTextInputElement(placeholder: Chars(151)));
     }
+
+    // The Slack API accepts these combinations, so the library must not reject them.
+    [Fact]
+    public void Lines_AreNotCrossValidated()
+    {
+        var minAboveMax = new RichTextInputElement(minLines: 10, maxLines: 2);
+        Assert.Equal(10, minAboveMax.MinLines);
+        Assert.Equal(2, minAboveMax.MaxLines);
+
+        var viaSetters = new RichTextInputElement(maxLines: 2);
+        viaSetters.MinLines = 10;
+        Assert.Equal(10, viaSetters.MinLines);
+
+        viaSetters.MaxLines = 1;
+        Assert.Equal(1, viaSetters.MaxLines);
+    }
 }
