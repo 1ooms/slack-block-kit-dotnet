@@ -8,11 +8,15 @@ namespace SlackBlockKit.Surfaces;
 /// </summary>
 /// <seealso href="https://docs.slack.dev/surfaces/app-home">Slack App Home Documentation</seealso>
 /// <seealso href="https://docs.slack.dev/reference/views/home-tab-views">Slack Home Tab View Reference</seealso>
-public class HomeSurface : ViewSurface
+public class HomeSurface
 {
+    private const int MaxBlocks = 100;
+    private const int MaxPrivateMetadataLength = 3000;
+    private const int MaxCallbackIdLength = 255;
+
     [JsonConstructor]
     public HomeSurface(
-        List<Block> blocks,
+        List<IHomeBlock> blocks,
         string? privateMetadata = null,
         string? callbackId = null,
         string? externalId = null)
@@ -23,10 +27,42 @@ public class HomeSurface : ViewSurface
         ExternalId = externalId;
     }
 
-    public HomeSurface(params Block[] blocks)
+    public HomeSurface(params IHomeBlock[] blocks)
         : this(blocks.ToList())
     {
     }
 
-    public override string Type => "home";
+    /// <remarks>
+    /// A plain read-only property rather than a polymorphic discriminator, so it's always written and is ignored
+    /// when reading, wherever it appears in the JSON Slack sends.
+    /// </remarks>
+    [JsonPropertyName("type")]
+    public string Type => "home";
+
+    [JsonPropertyName("blocks")]
+    public List<IHomeBlock> Blocks
+    {
+        get;
+        set => field = ThrowIfNullOrExceedsCount(value, MaxBlocks);
+    }
+
+    [JsonPropertyName("private_metadata")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? PrivateMetadata
+    {
+        get;
+        set => field = ThrowIfExceedsLength(value, MaxPrivateMetadataLength);
+    }
+
+    [JsonPropertyName("callback_id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? CallbackId
+    {
+        get;
+        set => field = ThrowIfExceedsLength(value, MaxCallbackIdLength);
+    }
+
+    [JsonPropertyName("external_id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ExternalId { get; set; }
 }

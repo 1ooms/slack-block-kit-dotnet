@@ -7,8 +7,7 @@ namespace SlackBlockKit.Surfaces;
 /// Represents a message payload with fallback text, blocks and threading, as sent with the
 /// <c>chat.postMessage</c> Web API method, incoming webhooks or a <c>response_url</c>.
 /// </summary>
-/// <remarks>Messages have no <c>"type"</c> property, so no discriminator is written
-/// and this class doesn't inherit from ViewSurface.</remarks>
+/// <remarks>Messages have no <c>"type"</c> property, so none is written.</remarks>
 /// <seealso href="https://docs.slack.dev/messaging/#payloads">Slack Message Payload Documentation</seealso>
 public class MessageSurface
 {

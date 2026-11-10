@@ -10,15 +10,18 @@ namespace SlackBlockKit.Surfaces;
 /// </summary>
 /// <seealso href="https://docs.slack.dev/surfaces/modals">Slack Modals Documentation</seealso>
 /// <seealso href="https://docs.slack.dev/reference/views/modal-views">Slack Modal View Reference</seealso>
-public class ModalSurface : ViewSurface
+public class ModalSurface
 {
     private const int MaxTitleLength = 24;
     private const int MaxButtonTextLength = 24;
+    private const int MaxBlocks = 100;
+    private const int MaxPrivateMetadataLength = 3000;
+    private const int MaxCallbackIdLength = 255;
 
     [JsonConstructor]
     public ModalSurface(
         PlainTextObject title,
-        List<Block> blocks,
+        List<IModalBlock> blocks,
         PlainTextObject? submit = null,
         PlainTextObject? close = null,
         string? callbackId = null,
@@ -42,7 +45,7 @@ public class ModalSurface : ViewSurface
 
     public ModalSurface(
         string title,
-        List<Block> blocks,
+        List<IModalBlock> blocks,
         string? submit = null,
         string? close = null,
         string? callbackId = null,
@@ -65,13 +68,25 @@ public class ModalSurface : ViewSurface
     {
     }
 
-    public override string Type => "modal";
+    /// <remarks>
+    /// A plain read-only property rather than a polymorphic discriminator, so it's always written and is ignored
+    /// when reading, wherever it appears in the JSON Slack sends.
+    /// </remarks>
+    [JsonPropertyName("type")]
+    public string Type => "modal";
 
     [JsonPropertyName("title")]
     public PlainTextObject Title
     {
         get;
         set => field = ThrowIfNullOrExceedsLength(value, MaxTitleLength);
+    }
+
+    [JsonPropertyName("blocks")]
+    public List<IModalBlock> Blocks
+    {
+        get;
+        set => field = ThrowIfNullOrExceedsCount(value, MaxBlocks);
     }
 
     [JsonPropertyName("submit")]
@@ -90,6 +105,22 @@ public class ModalSurface : ViewSurface
         set => field = ThrowIfExceedsLength(value, MaxButtonTextLength);
     }
 
+    [JsonPropertyName("callback_id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? CallbackId
+    {
+        get;
+        set => field = ThrowIfExceedsLength(value, MaxCallbackIdLength);
+    }
+
+    [JsonPropertyName("private_metadata")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? PrivateMetadata
+    {
+        get;
+        set => field = ThrowIfExceedsLength(value, MaxPrivateMetadataLength);
+    }
+
     [JsonPropertyName("clear_on_close")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? ClearOnClose { get; set; }
@@ -97,6 +128,10 @@ public class ModalSurface : ViewSurface
     [JsonPropertyName("notify_on_close")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? NotifyOnClose { get; set; }
+
+    [JsonPropertyName("external_id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ExternalId { get; set; }
 
     [JsonPropertyName("submit_disabled")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
