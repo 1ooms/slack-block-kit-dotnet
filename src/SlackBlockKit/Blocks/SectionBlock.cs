@@ -22,11 +22,10 @@ public class SectionBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
         bool? expand = null,
         string? blockId = null)
     {
-        if (text == null && (fields == null || fields.Count == 0))
-            throw new ArgumentException("Either text or fields must be provided for SectionBlock.");
+        ValidateContent(text, fields);
 
-        Text = text;
-        Fields = fields;
+        if (text != null) Text = text;
+        if (fields != null) Fields = fields;
         Accessory = accessory;
         Expand = expand;
         BlockId = blockId;
@@ -39,20 +38,31 @@ public class SectionBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
 
     public override string Type => "section";
 
+    /// <remarks>
+    /// At least one of <see cref="Text"/> or <see cref="Fields"/> must be set; both may be set.
+    /// </remarks>
     [JsonPropertyName("text")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public TextObject? Text
     {
         get;
-        init => field = ThrowIfExceedsLength(value, MaxTextLength);
+        set
+        {
+            ThrowIfExceedsLength(value, MaxTextLength);
+            ValidateContent(value, Fields);
+            field = value;
+        }
     }
 
+    /// <remarks>
+    /// At least one of <see cref="Text"/> or <see cref="Fields"/> must be set; both may be set.
+    /// </remarks>
     [JsonPropertyName("fields")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<TextObject>? Fields
     {
         get;
-        init
+        set
         {
             if (value != null)
             {
@@ -64,6 +74,7 @@ public class SectionBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
                 }
             }
 
+            ValidateContent(Text, value);
             field = value;
         }
     }
@@ -75,4 +86,10 @@ public class SectionBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
     [JsonPropertyName("expand")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? Expand { get; set; }
+
+    private static void ValidateContent(TextObject? text, List<TextObject>? fields)
+    {
+        if (text == null && (fields == null || fields.Count == 0))
+            throw new ArgumentException("Either text or fields must be provided for SectionBlock.");
+    }
 }

@@ -107,6 +107,33 @@ public class SectionBlockTests
     }
 
     [Fact]
+    public void Initializer_ThrowsWhenNoContentRemains()
+    {
+        Assert.Throws<ArgumentException>(() => new SectionBlock("Text") { Text = null });
+        Assert.Throws<ArgumentException>(() =>
+            new SectionBlock(fields: [new PlainTextObject("Field")]) { Fields = null });
+    }
+
+    [Fact]
+    public void Setters_AllowClearingOneWhenTheOtherRemains()
+    {
+        var block = new SectionBlock("Text");
+
+        Assert.Throws<ArgumentException>(() => block.Text = null);
+
+        block.Fields = [new PlainTextObject("Field")];
+        block.Text = null;
+
+        Assert.Null(block.Text);
+        Assert.Single(block.Fields);
+        Assert.Throws<ArgumentException>(() => block.Fields = null);
+
+        block.Text = new PlainTextObject("Back");
+        block.Fields = null;
+        Assert.Equal("Back", block.Text.Text);
+    }
+
+    [Fact]
     public void Fields_ThrowsWhenEmptyAlongsideText()
     {
         Assert.Throws<ArgumentException>(() => new SectionBlock(new PlainTextObject("Text"), []));
