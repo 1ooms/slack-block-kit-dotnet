@@ -112,4 +112,46 @@ public class ImageBlockTests
         Assert.NotNull(new ImageBlock("alt", Url, null, new PlainTextObject(Chars(2000))));
         Assert.Throws<ArgumentException>(() => new ImageBlock("alt", Url, null, new PlainTextObject(Chars(2001))));
     }
+
+    [Fact]
+    public void Constructor_AcceptsBothImageSources()
+    {
+        var block = new ImageBlock("alt", Url, SlackFileObject.FromId("F0123ABCD"));
+
+        Assert.Equal(Url, block.ImageUrl);
+        Assert.NotNull(block.SlackFile);
+    }
+
+    [Fact]
+    public void Initializer_ThrowsWhenNoImageSourceRemains()
+    {
+        Assert.Throws<ArgumentException>(() => new ImageBlock("alt", Url) { ImageUrl = null });
+        Assert.Throws<ArgumentException>(() =>
+            new ImageBlock("alt", slackFile: SlackFileObject.FromId("F0123ABCD")) { SlackFile = null });
+    }
+
+    [Fact]
+    public void Setters_AllowClearingOneImageSourceWhenTheOtherRemains()
+    {
+        var block = ImageBlock.FromImageUrl("alt", Url);
+
+        Assert.Throws<ArgumentException>(() => block.ImageUrl = null);
+
+        block.SlackFile = SlackFileObject.FromId("F0123ABCD");
+        block.ImageUrl = null;
+
+        Assert.Null(block.ImageUrl);
+        Assert.NotNull(block.SlackFile);
+        Assert.Throws<ArgumentException>(() => block.SlackFile = null);
+    }
+
+    [Fact]
+    public void Deserialize_RoundTripsEitherImageSource()
+    {
+        var withUrl = SlackSerializer.Serialize(ImageBlock.FromImageUrl("alt", Url));
+        var withFile = SlackSerializer.Serialize(ImageBlock.FromSlackFile("alt", SlackFileObject.FromId("F0123ABCD")));
+
+        Assert.Equal(Url, SlackSerializer.Deserialize<ImageBlock>(withUrl)!.ImageUrl);
+        Assert.Equal("F0123ABCD", SlackSerializer.Deserialize<ImageBlock>(withFile)!.SlackFile!.Id);
+    }
 }

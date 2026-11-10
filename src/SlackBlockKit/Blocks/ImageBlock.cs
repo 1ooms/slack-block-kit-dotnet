@@ -21,12 +21,11 @@ public class ImageBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
         PlainTextObject? title = null,
         string? blockId = null)
     {
-        if (imageUrl == null && slackFile == null)
-            throw new ArgumentException("Either ImageUrl or SlackFile must be provided.");
+        ValidateImageSource(imageUrl, slackFile);
 
         AltText = altText;
-        ImageUrl = imageUrl;
-        SlackFile = slackFile;
+        if (imageUrl != null) ImageUrl = imageUrl;
+        if (slackFile != null) SlackFile = slackFile;
         Title = title;
         BlockId = blockId;
     }
@@ -40,17 +39,38 @@ public class ImageBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
         set => field = ThrowIfNullOrExceedsLength(value, MaxAltTextLength);
     }
 
+    /// <remarks>
+    /// At least one of <see cref="ImageUrl"/> or <see cref="SlackFile"/> must be set.
+    /// If both are set, <see cref="ImageUrl"/> takes precedence over <see cref="SlackFile"/>.
+    /// </remarks>
     [JsonPropertyName("image_url")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? ImageUrl
     {
         get;
-        init => field = ThrowIfEmptyOrExceedsLength(value, MaxImageUrlLength);
+        set
+        {
+            ThrowIfEmptyOrExceedsLength(value, MaxImageUrlLength);
+            ValidateImageSource(value, SlackFile);
+            field = value;
+        }
     }
 
+    /// <remarks>
+    /// At least one of <see cref="ImageUrl"/> or <see cref="SlackFile"/> must be set.
+    /// If both are set, <see cref="ImageUrl"/> takes precedence over <see cref="SlackFile"/>.
+    /// </remarks>
     [JsonPropertyName("slack_file")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SlackFileObject? SlackFile { get; init; }
+    public SlackFileObject? SlackFile
+    {
+        get;
+        set
+        {
+            ValidateImageSource(ImageUrl, value);
+            field = value;
+        }
+    }
 
     [JsonPropertyName("title")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
@@ -72,5 +92,11 @@ public class ImageBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
     {
         return new ImageBlock(altText, slackFile: slackFile, title: title != null ? new PlainTextObject(title) : null,
             blockId: blockId);
+    }
+
+    private static void ValidateImageSource(string? imageUrl, SlackFileObject? slackFile)
+    {
+        if (imageUrl == null && slackFile == null)
+            throw new ArgumentException("Either ImageUrl or SlackFile must be provided.");
     }
 }
