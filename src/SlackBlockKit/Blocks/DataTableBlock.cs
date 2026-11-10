@@ -11,6 +11,10 @@ public class DataTableBlock : Block, IMessageBlock, IHomeBlock
 {
     private const int MaxRows = 201;
     private const int MaxColumns = 20;
+    private const int MinPageSize = 1;
+    private const int MaxPageSize = 100;
+    private const int MinRowHeaderColumnIndex = 0;
+    private const int MaxRowHeaderColumnIndex = MaxColumns - 1;
 
     public DataTableBlock(
         string caption,
@@ -60,7 +64,7 @@ public class DataTableBlock : Block, IMessageBlock, IHomeBlock
     public int? PageSize
     {
         get;
-        set => field = ThrowIfNotBetween(value, 1, 100);
+        set => field = ThrowIfNotBetween(value, MinPageSize, MaxPageSize);
     }
 
     [JsonPropertyName("row_header_column_index")]
@@ -68,7 +72,7 @@ public class DataTableBlock : Block, IMessageBlock, IHomeBlock
     public int? RowHeaderColumnIndex
     {
         get;
-        set => field = ThrowIfNotBetween(value, 0, 19);
+        set => field = ThrowIfNotBetween(value, MinRowHeaderColumnIndex, MaxRowHeaderColumnIndex);
     }
 }
 
