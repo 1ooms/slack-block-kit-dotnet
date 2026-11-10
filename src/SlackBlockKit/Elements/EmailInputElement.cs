@@ -13,6 +13,8 @@ public partial class EmailInputElement : ActionElement, IInputElement
 {
     private const int MaxPlaceholderLength = 150;
 
+    private const string EmailPattern = @"^[\w.+-]+@([\w-]+\.)+[\w-]{2,}$";
+
     public EmailInputElement(
         string? actionId = null,
         string? initialValue = null,
@@ -38,7 +40,7 @@ public partial class EmailInputElement : ActionElement, IInputElement
         {
             if (value != null && !EmailRegex().IsMatch(value))
                 throw new ArgumentException(
-                    $@"Invalid Email '{value}'. Email must match regex pattern '^[\w-\.]+@([\w-]+\.)+[\w-]{{2,4}}$'.",
+                    $"Invalid Email '{value}'. Email must match regex pattern '{EmailPattern}'.",
                     nameof(value));
             field = value;
         }
@@ -60,6 +62,6 @@ public partial class EmailInputElement : ActionElement, IInputElement
         set => field = ThrowIfExceedsLength(value, MaxPlaceholderLength);
     }
 
-    [GeneratedRegex(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")]
+    [GeneratedRegex(EmailPattern)]
     private static partial Regex EmailRegex();
 }

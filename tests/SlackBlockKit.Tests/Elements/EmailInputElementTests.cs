@@ -40,6 +40,9 @@ public class EmailInputElementTests
     [InlineData("user@example.com")]
     [InlineData("first.last@sub.example.org")]
     [InlineData("user-name@example.co")]
+    [InlineData("user@example.company")]
+    [InlineData("user@example.technology")]
+    [InlineData("first+tag@example.com")]
     public void InitialValue_AcceptsValidEmails(string email)
     {
         Assert.Equal(email, new EmailInputElement(initialValue: email).InitialValue);
@@ -51,7 +54,8 @@ public class EmailInputElementTests
     [InlineData("user@")]
     [InlineData("@example.com")]
     [InlineData("user@example")]
-    [InlineData("user@example.toolongtld")]
+    [InlineData("user@example.c")]
+    [InlineData("user name@example.com")]
     public void InitialValue_ThrowsOnInvalidEmails(string email)
     {
         Assert.Throws<ArgumentException>(() => new EmailInputElement(initialValue: email));
