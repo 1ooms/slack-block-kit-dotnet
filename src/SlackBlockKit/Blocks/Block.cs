@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace SlackBlockKit.Blocks;
@@ -41,4 +42,55 @@ public abstract class Block
     }
 
     [JsonIgnore] public abstract string Type { get; }
+}
+
+/// <summary>
+/// Marks a block as available in messages (<see cref="SlackBlockKit.Surfaces.MessageSurface"/>).
+/// </summary>
+/// <remarks>Taken from the <c>available_in_surfaces</c> list on each block's Slack documentation page.</remarks>
+/// <seealso href="https://docs.slack.dev/messaging">Slack Messages Documentation</seealso>
+[JsonConverter(typeof(InterfaceBlockConverter<IMessageBlock>))]
+public interface IMessageBlock;
+
+/// <summary>
+/// Marks a block as available in modals (<see cref="SlackBlockKit.Surfaces.ModalSurface"/>).
+/// </summary>
+/// <remarks>Taken from the <c>available_in_surfaces</c> list on each block's Slack documentation page.</remarks>
+/// <seealso href="https://docs.slack.dev/surfaces/modals">Slack Modals Documentation</seealso>
+[JsonConverter(typeof(InterfaceBlockConverter<IModalBlock>))]
+public interface IModalBlock;
+
+/// <summary>
+/// Marks a block as available in App Home tabs (<see cref="SlackBlockKit.Surfaces.HomeSurface"/>).
+/// </summary>
+/// <remarks>Taken from the <c>available_in_surfaces</c> list on each block's Slack documentation page.</remarks>
+/// <seealso href="https://docs.slack.dev/surfaces/app-home">Slack App Home Documentation</seealso>
+[JsonConverter(typeof(InterfaceBlockConverter<IHomeBlock>))]
+public interface IHomeBlock;
+
+/// <summary>
+/// Converter for surface marker interfaces whose implementors all derive from <see cref="Block"/>.
+/// </summary>
+/// <remarks>
+/// Delegates to the polymorphic <see cref="Block"/> hierarchy, so the <c>"type"</c> discriminator is written and read
+/// without repeating every <see cref="JsonDerivedTypeAttribute"/> on each interface. Reading a block that isn't
+/// available in the surface throws a <see cref="JsonException"/>.
+/// </remarks>
+public class InterfaceBlockConverter<T> : JsonConverter<T> where T : class
+{
+    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var block = JsonSerializer.Deserialize<Block>(ref reader, options);
+        return block switch
+        {
+            null => null,
+            T typed => typed,
+            _ => throw new JsonException($"Block type '{block.Type}' is not supported by {typeof(T).Name}.")
+        };
+    }
+
+    public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, (Block)(object)value, options);
+    }
 }
