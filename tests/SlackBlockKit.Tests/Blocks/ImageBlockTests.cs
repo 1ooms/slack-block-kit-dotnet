@@ -99,9 +99,12 @@ public class ImageBlockTests
     }
 
     [Fact]
-    public void ImageUrl_ThrowsWhenEmptyOrTooLong()
+    public void ImageUrl_ThrowsWhenEmptyWhitespaceOrTooLong()
     {
         Assert.Throws<ArgumentException>(() => new ImageBlock("alt", "", null, null, null));
+        Assert.Throws<ArgumentException>(() => new ImageBlock("alt", " ", null, null, null));
+        Assert.Throws<ArgumentException>(() =>
+            new ImageBlock("alt", "   ", SlackFileObject.FromId("F0123ABCD"), null, null));
         Assert.NotNull(new ImageBlock("alt", Chars(3000), null, null, null));
         Assert.Throws<ArgumentException>(() => new ImageBlock("alt", Chars(3001), null, null, null));
     }

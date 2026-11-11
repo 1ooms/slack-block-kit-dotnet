@@ -51,6 +51,11 @@ public class ImageBlock : Block, IMessageBlock, IModalBlock, IHomeBlock
         set
         {
             ThrowIfEmptyOrExceedsLength(value, MaxImageUrlLength);
+
+            // The Slack API rejects a whitespace-only image_url for image blocks. ("Downloading image failed").
+            if (value != null && string.IsNullOrWhiteSpace(value))
+                throw new ArgumentException("ImageUrl cannot be whitespace.", nameof(ImageUrl));
+
             ValidateImageSource(value, SlackFile);
             field = value;
         }
