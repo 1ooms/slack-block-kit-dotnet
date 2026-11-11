@@ -54,7 +54,8 @@ public class ImageElement : Element, IContextElement, ISectionElement
 
     private static void ValidateAtLeastOne(string? imageUrl, SlackFileObject? slackFile)
     {
-        if (string.IsNullOrWhiteSpace(imageUrl) && slackFile == null)
+        // The Slack API accepts a whitespace image_url for image elements.
+        if (imageUrl == null && slackFile == null)
         {
             throw new ArgumentException("Either imageUrl or slackFile must be provided for ImageElement.");
         }

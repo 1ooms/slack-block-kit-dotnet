@@ -50,7 +50,15 @@ public class ImageElementTests
     public void Constructor_ThrowsWithoutImageSource()
     {
         Assert.Throws<ArgumentException>(() => new ImageElement("alt"));
-        Assert.Throws<ArgumentException>(() => new ImageElement("alt", " "));
+    }
+
+    // The Slack API accepts a whitespace-only image_url on image elements, so the library must too.
+    [Fact]
+    public void ImageUrl_AcceptsWhitespaceButNotEmpty()
+    {
+        Assert.Equal(" ", new ImageElement("alt", " ").ImageUrl);
+        Assert.Equal(" ", ImageElement.FromImageUrl("alt", " ").ImageUrl);
+        Assert.Throws<ArgumentException>(() => new ImageElement("alt", ""));
     }
 
     [Fact]
